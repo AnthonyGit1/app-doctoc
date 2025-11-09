@@ -3,13 +3,23 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  
+  /* Colores de Doctoc */
+  --primary: #0066ff;
+  --primary-dark: #0052cc;
+  --primary-light: #e6f2ff;
+  --secondary: #1a1a1a;
+  --accent: #00cc66;
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -23,4 +33,25 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Clases de utilidad personalizadas para Doctoc */
+.btn-primary {
+  @apply bg-[#0066ff] hover:bg-[#0052cc] text-white px-6 py-3 rounded-lg font-medium transition-colors;
+}
+
+.btn-secondary {
+  @apply bg-transparent border border-[#0066ff] text-[#0066ff] hover:bg-[#e6f2ff] px-6 py-3 rounded-lg font-medium transition-colors;
+}
+
+.text-primary {
+  color: var(--primary);
+}
+
+.bg-primary {
+  background-color: var(--primary);
+}
+
+.border-primary {
+  border-color: var(--primary);
 }
