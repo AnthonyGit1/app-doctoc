@@ -21,7 +21,9 @@ export class DoctocApiClient {
     endpoint: string, 
     data: TRequest
   ): Promise<TResponse> {
-    const url = `${this.baseUrl}/${endpoint}`;
+    // Limpiar la URL para evitar dobles barras
+    const cleanEndpoint = endpoint.startsWith('/') ? endpoint.slice(1) : endpoint;
+    const url = `${this.baseUrl}/${cleanEndpoint}`;
     
     try {
       const response = await fetch(url, {
@@ -46,7 +48,9 @@ export class DoctocApiClient {
     endpoint: string,
     queryParams?: Record<string, string>
   ): Promise<TResponse> {
-    let url = `${this.baseUrl}/${endpoint}`;
+    // Limpiar la URL para evitar dobles barras
+    const cleanEndpoint = endpoint.startsWith('/') ? endpoint.slice(1) : endpoint;
+    let url = `${this.baseUrl}/${cleanEndpoint}`;
     
     if (queryParams) {
       const params = new URLSearchParams(queryParams);

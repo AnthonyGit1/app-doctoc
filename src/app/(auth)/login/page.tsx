@@ -1,29 +1,19 @@
 "use client";
 
 import { useState, useEffect, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "../../../presentation/components/ui/Button";
 import { Input } from "../../../presentation/components/ui/Input";
 import { useAuth } from "../../../infrastructure/auth/AuthContext";
+import toast from 'react-hot-toast';
 
 function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
   const router = useRouter();
-  const searchParams = useSearchParams();
   const { login, user } = useAuth();
-
-  useEffect(() => {
-    // Mostrar mensaje de éxito si viene del registro
-    const message = searchParams.get('message');
-    if (message) {
-      setSuccessMessage(message);
-    }
-  }, [searchParams]);
 
   useEffect(() => {
     // Redirigir si ya está autenticado
@@ -35,26 +25,30 @@ function LoginForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setError("");
-    setSuccessMessage("");
+
+    // Toast de loading
+    const loadingToast = toast.loading('Iniciando sesión...');
 
     try {
       await login(email, password);
+      toast.dismiss(loadingToast);
+      toast.success('¡Bienvenido de vuelta!');
       // La redirección se maneja en useEffect
     } catch (error: unknown) {
+      toast.dismiss(loadingToast);
       const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
       
       // Personalizar mensajes de error de Firebase
       if (errorMessage.includes('user-not-found')) {
-        setError("No existe una cuenta con este email.");
+        toast.error("No existe una cuenta con este email.");
       } else if (errorMessage.includes('wrong-password')) {
-        setError("Contraseña incorrecta.");
+        toast.error("Contraseña incorrecta.");
       } else if (errorMessage.includes('invalid-email')) {
-        setError("Email inválido.");
+        toast.error("Email inválido.");
       } else if (errorMessage.includes('too-many-requests')) {
-        setError("Demasiados intentos fallidos. Intenta más tarde.");
+        toast.error("Demasiados intentos fallidos. Intenta más tarde.");
       } else {
-        setError("Error al iniciar sesión. Verifica tus credenciales.");
+        toast.error("Error al iniciar sesión. Verifica tus credenciales.");
       }
     } finally {
       setIsLoading(false);
@@ -68,7 +62,7 @@ function LoginForm() {
         <div className="flex justify-center mb-8">
           <div className="flex items-center">
             <div className="w-10 h-10 bg-[#0066ff] rounded-lg mr-3 flex items-center justify-center">
-              <span className="text-white text-xl font-bold">+</span>
+              <span className="text-white text-xl font-bold">D</span>
             </div>
             <h1 className="text-3xl font-bold text-gray-900">Doctoc</h1>
           </div>
@@ -87,24 +81,6 @@ function LoginForm() {
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-6 shadow-lg sm:rounded-lg sm:px-10 border border-gray-200">
           <form onSubmit={handleSubmit} className="space-y-6">
-            {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">
-                <div className="flex items-center">
-                  <span className="text-red-500 mr-2">⚠</span>
-                  {error}
-                </div>
-              </div>
-            )}
-
-            {successMessage && (
-              <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-md text-sm">
-                <div className="flex items-center">
-                  <span className="text-green-500 mr-2">✓</span>
-                  {successMessage}
-                </div>
-              </div>
-            )}
-
             <Input
               label="Correo electrónico"
               type="email"

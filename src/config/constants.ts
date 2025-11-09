@@ -1,7 +1,7 @@
 // Constantes de configuración del proyecto
 export const API_CONFIG = {
   BASE_URL: process.env.NEXT_PUBLIC_DOCTOC_API_URL || 'https://us-central1-doctoc-main.cloudfunctions.net',
-  AUTH_TOKEN: process.env.DOCTOC_API_TOKEN || '',
+  AUTH_TOKEN: process.env.NEXT_PUBLIC_DOCTOC_API_TOKEN || '',
   TIMEOUT: 10000,
   DEFAULT_ORG_ID: process.env.NEXT_PUBLIC_DEFAULT_ORG_ID || 'rFQpBRoNGiv0V9KnHZV6',
 } as const;

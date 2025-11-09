@@ -17,7 +17,7 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
       <div
         ref={ref}
         className={cn(
-          'rounded-lg p-6 transition-shadow',
+          'rounded-xl p-6 transition-shadow',
           variants[variant],
           className
         )}
@@ -35,7 +35,7 @@ const CardHeader = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, children, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn('flex flex-col space-y-1.5 pb-4', className)}
+      className={cn('flex flex-col space-y-1.5 pb-6', className)}
       {...props}
     >
       {children}
@@ -63,7 +63,7 @@ const CardContent = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, children, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn('text-gray-600', className)}
+      className={cn('text-gray-600 py-2', className)}
       {...props}
     >
       {children}
@@ -73,4 +73,18 @@ const CardContent = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
 
 CardContent.displayName = 'CardContent';
 
-export { Card, CardHeader, CardTitle, CardContent };
+const CardFooter = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
+  ({ className, children, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn('flex items-center pt-6', className)}
+      {...props}
+    >
+      {children}
+    </div>
+  )
+);
+
+CardFooter.displayName = 'CardFooter';
+
+export { Card, CardHeader, CardTitle, CardContent, CardFooter };

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Button } from "../../../presentation/components/ui/Button";
 import { Input } from "../../../presentation/components/ui/Input";
 import { useAuth } from "../../../infrastructure/auth/AuthContext";
+import toast from 'react-hot-toast';
 
 function RegisterForm() {
   const [formData, setFormData] = useState({
@@ -15,7 +16,6 @@ function RegisterForm() {
     confirmPassword: "",
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
   const router = useRouter();
   const { register, user } = useAuth();
 
@@ -29,38 +29,45 @@ function RegisterForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setError("");
 
     if (formData.password !== formData.confirmPassword) {
-      setError("Las contraseñas no coinciden");
+      toast.error("Las contraseñas no coinciden");
       setIsLoading(false);
       return;
     }
 
     if (formData.password.length < 6) {
-      setError("La contraseña debe tener al menos 6 caracteres");
+      toast.error("La contraseña debe tener al menos 6 caracteres");
       setIsLoading(false);
       return;
     }
 
+    // Toast de loading
+    const loadingToast = toast.loading('Creando cuenta...');
+
     try {
       await register(formData.email, formData.password, formData.name);
       
-      // Redireccionar al login con mensaje de éxito
-      router.push("/login?message=Cuenta creada exitosamente. Ahora puedes iniciar sesión.");
+      toast.dismiss(loadingToast);
+      toast.success('¡Bienvenido a Doctoc! Cuenta creada exitosamente.');
+      
+      // Como Firebase registra y autentica automáticamente,
+      // esperamos un momento para que el useEffect detecte el user
+      // y redirija al dashboard
       
     } catch (error: unknown) {
+      toast.dismiss(loadingToast);
       const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
       
       // Personalizar mensajes de error de Firebase
       if (errorMessage.includes('email-already-in-use')) {
-        setError("Ya existe una cuenta con este email.");
+        toast.error("Ya existe una cuenta con este email.");
       } else if (errorMessage.includes('weak-password')) {
-        setError("La contraseña es muy débil.");
+        toast.error("La contraseña es muy débil.");
       } else if (errorMessage.includes('invalid-email')) {
-        setError("Email inválido.");
+        toast.error("Email inválido.");
       } else {
-        setError("Error al crear la cuenta. Inténtalo de nuevo.");
+        toast.error("Error al crear la cuenta. Inténtalo de nuevo.");
       }
     } finally {
       setIsLoading(false);
@@ -81,7 +88,7 @@ function RegisterForm() {
         <div className="flex justify-center mb-8">
           <div className="flex items-center">
             <div className="w-10 h-10 bg-[#0066ff] rounded-lg mr-3 flex items-center justify-center">
-              <span className="text-white text-xl font-bold">+</span>
+              <span className="text-white text-xl font-bold">D</span>
             </div>
             <h1 className="text-3xl font-bold text-gray-900">Doctoc</h1>
           </div>
@@ -100,15 +107,6 @@ function RegisterForm() {
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-6 shadow-lg sm:rounded-lg sm:px-10 border border-gray-200">
           <form onSubmit={handleSubmit} className="space-y-6">
-            {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">
-                <div className="flex items-center">
-                  <span className="text-red-500 mr-2">⚠</span>
-                  {error}
-                </div>
-              </div>
-            )}
-
             <Input
               label="Nombre completo del paciente"
               name="name"
