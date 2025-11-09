@@ -3,9 +3,9 @@
 import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { Button } from "../../../components/ui/Button";
-import { Input } from "../../../components/ui/Input";
-import { useAuth } from "../../../contexts/AuthContext";
+import { Button } from "../../../presentation/components/ui/Button";
+import { Input } from "../../../presentation/components/ui/Input";
+import { useAuth } from "../../../infrastructure/auth/AuthContext";
 
 function LoginForm() {
   const [email, setEmail] = useState("");

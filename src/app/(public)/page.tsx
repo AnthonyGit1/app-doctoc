@@ -1,11 +1,11 @@
 
 "use client";
 
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../infrastructure/auth/AuthContext";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import Link from "next/link";
-import { Button } from "../../components/ui/Button";
+import { Button } from "../../presentation/components/ui/Button";
 
 export default function Home() {
   const { user, loading } = useAuth();
