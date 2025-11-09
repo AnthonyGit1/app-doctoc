@@ -1,0 +1,2350 @@
+{
+	"info": {
+		"_postman_id": "41f145d8-c08c-4db1-afe8-05367fddc1a3",
+		"name": "API Carla - Documentación Completa",
+		"description": "Colección completa de endpoints para la gestión de consultas médicas, pacientes, usuarios, pagos y más.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11925314"
+	},
+	"item": [
+		{
+			"name": "1. Gestión de Citas",
+			"item": [
+				{
+					"name": "Crear Cita",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"action\": \"create\",\n    \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n    \"dayKey\": \"10-04-2025\",\n    \"scheduledStart\": \"2025-04-10T20:07:00.000Z\",\n    \"scheduledEnd\": \"2025-04-10T21:07:00.000Z\",\n    \"patient\": \"2OHmazUQ2WfII9MVmffT\",\n    \"userId\": \"QI0H3vOu8rbeyAkXMG9WIDf9GRX2\",\n    \"type\": \"Consulta\",\n    \"typeId\": \"LKJwcXdPu4LEfckOevwy\",\n    \"motive\": \"Control mensual\",\n    \"status\": \"pendiente\",\n    \"version\": \"v2\",\n    \"locationId\": \"sede_m7uzp0b0_hdjy8j9v\",\n    \"recipeID\": \"\",\n    \"category\": \"cita\",\n    \"personaEjecutante\": \"Administrador\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/manageQuotesAPIV2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"manageQuotesAPIV2"
+							]
+						},
+						"description": "Crea una nueva cita médica. Es importante proporcionar la clave del día (dayKey) en formato DD-MM-YYYY para asegurar que la cita se almacene correctamente según la zona horaria del cliente."
+					},
+					"response": [
+						{
+							"name": "Respuesta Exitosa",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"action\": \"create\",\n    \"orgID\": \"I1sUsHVoyEM78wO8y7g2\",\n    \"quoteID\": \"quote456\",\n    \"dayKey\": \"04-03-2025\",\n    \"scheduledStart\": \"2025-03-04T10:00:00Z\",\n    \"scheduledEnd\": \"2025-03-04T11:00:00Z\",\n    \"patient\": \"VMlqlQgBMEuslqRDcg2d\",\n    \"userId\": \"IJqWXjUaJbelahmlTT2S15YM0Xx1\",\n    \"type\": \"Consulta\",\n    \"motive\": \"Control mensual\",\n    \"status\": \"pendiente\",\n    \"version\": \"v2\",\n    \"locationId\": \"m7kl56yslu2i71k6yfi\"\n}"
+								},
+								"url": {
+									"raw": ""
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": \"success\",\n    \"action\": \"create\",\n    \"quote\": {\n        \"id\": \"quote456\",\n        \"patientId\": \"VMlqlQgBMEuslqRDcg2d\",\n        \"userId\": \"IJqWXjUaJbelahmlTT2S15YM0Xx1\",\n        \"date\": \"04-03-2025\",\n        \"startDate\": \"2025-03-04T10:00:00Z\",\n        \"endDate\": \"2025-03-04T11:00:00Z\",\n        \"type\": \"Consulta\",\n        \"motive\": \"Control mensual\",\n        \"status\": \"pendiente\",\n        \"version\": \"v2\",\n        \"locationId\": \"m7kl56yslu2i71k6yfi\",\n        \"history\": [\n            {\n                \"action\": \"created\",\n                \"timestamp\": {\n                    \"_seconds\": 1709632844,\n                    \"_nanoseconds\": 123000000\n                },\n                \"userId\": \"IJqWXjUaJbelahmlTT2S15YM0Xx1\"\n            }\n        ]\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Actualizar Cita",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"action\": \"update\",\n    \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n    \"quoteID\": \"vyDWOwUhYJS3ywEXfEpr\",\n    \"dayKey\": \"10-04-2025\",\n    \"oldDayKey\": \"10-04-2025\",\n    \"scheduledStart\": \"2025-04-11T03:05:00.000Z\",\n    \"scheduledEnd\": \"2025-04-11T04:05:00.000Z\",\n    \"patient\": \"2OHmazUQ2WfII9MVmffT\",\n    \"userId\": \"QI0H3vOu8rbeyAkXMG9WIDf9GRX2\",\n    \"type\": \"Consulta\",\n    \"typeId\": \"LKJwcXdPu4LEfckOevwy\",\n    \"motive\": \"Control mensual actualizado\", \n    \"status\": \"pendiente\",\n    \"locationId\": \"sede_m7uzp0b0_hdjy8j9v\",\n    \"recipeID\": \"\",\n    \"category\": \"cita\",\n    \"personaEjecutante\": \"Administrador\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/manageQuotesAPIV2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"manageQuotesAPIV2"
+							]
+						},
+						"description": "Actualiza una cita existente. Si el día cambia, se debe proporcionar tanto el dayKey nuevo como el oldDayKey para mover correctamente la cita. Se registra automáticamente la acción 'edited' en el historial."
+					},
+					"response": [
+						{
+							"name": "Respuesta Exitosa",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"action\": \"update\",\n    \"orgID\": \"I1sUsHVoyEM78wO8y7g2\",\n    \"quoteID\": \"quote456\",\n    \"dayKey\": \"05-03-2025\",\n    \"oldDayKey\": \"04-03-2025\",\n    \"scheduledStart\": \"2025-03-05T14:00:00Z\",\n    \"scheduledEnd\": \"2025-03-05T15:00:00Z\",\n    \"patient\": \"VMlqlQgBMEuslqRDcg2d\",\n    \"userId\": \"IJqWXjUaJbelahmlTT2S15YM0Xx1\",\n    \"type\": \"Teleconsulta\",\n    \"motive\": \"Control mensual actualizado\",\n    \"status\": \"confirmada\"\n}"
+								},
+								"url": {
+									"raw": ""
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": \"success\",\n    \"action\": \"update\",\n    \"quote\": {\n        \"id\": \"quote456\",\n        \"patientId\": \"VMlqlQgBMEuslqRDcg2d\",\n        \"userId\": \"IJqWXjUaJbelahmlTT2S15YM0Xx1\",\n        \"date\": \"05-03-2025\",\n        \"startDate\": \"2025-03-05T14:00:00Z\",\n        \"endDate\": \"2025-03-05T15:00:00Z\",\n        \"type\": \"Teleconsulta\",\n        \"motive\": \"Control mensual actualizado\",\n        \"status\": \"confirmada\",\n        \"version\": \"v2\",\n        \"locationId\": \"m7kl56yslu2i71k6yfi\",\n        \"history\": [\n            {\n                \"action\": \"created\",\n                \"timestamp\": {\n                    \"_seconds\": 1709632844,\n                    \"_nanoseconds\": 123000000\n                },\n                \"userId\": \"IJqWXjUaJbelahmlTT2S15YM0Xx1\"\n            },\n            {\n                \"action\": \"edited\",\n                \"timestamp\": {\n                    \"_seconds\": 1709719244,\n                    \"_nanoseconds\": 456000000\n                },\n                \"userId\": \"IJqWXjUaJbelahmlTT2S15YM0Xx1\"\n            }\n        ]\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Eliminar Cita",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"action\": \"cancel\",\n    \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n    \"dayKey\": \"10-04-2025\",\n    \"userId\": \"QI0H3vOu8rbeyAkXMG9WIDf9GRX2\",\n    \"quoteID\": \"QtVjNdonzPbzIPuaXAfR\",\n    \"cancelReason\": \"\",\n    \"personaEjecutante\": \"Administrador\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/manageQuotesAPIV2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"manageQuotesAPIV2"
+							]
+						},
+						"description": "Elimina una cita existente. La cita se elimina completamente del sistema y se quita la referencia en el historial del paciente."
+					},
+					"response": [
+						{
+							"name": "Respuesta Exitosa",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"action\": \"delete\",\n    \"orgID\": \"I1sUsHVoyEM78wO8y7g2\",\n    \"quoteID\": \"quote456\",\n    \"dayKey\": \"05-03-2025\",\n    \"scheduledStart\": \"2025-03-05T14:00:00Z\",\n    \"scheduledEnd\": \"2025-03-05T15:00:00Z\",\n    \"patient\": \"VMlqlQgBMEuslqRDcg2d\",\n    \"userId\": \"IJqWXjUaJbelahmlTT2S15YM0Xx1\"\n}"
+								},
+								"url": {
+									"raw": ""
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": \"success\",\n    \"action\": \"delete\",\n    \"quoteID\": \"quote456\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Obtener Citas de Paciente",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n    \"patientID\": \"ZXQeuPYhhrYO0ByrQ1Pf\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/getPatientQuoteAPIV2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"getPatientQuoteAPIV2"
+							]
+						},
+						"description": "Obtiene todas las citas de un paciente específico. Recupera las referencias del historial clínico del paciente y devuelve las citas completas."
+					},
+					"response": [
+						{
+							"name": "Respuesta Exitosa",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"orgID\": \"I1sUsHVoyEM78wO8y7g2\",\n    \"patientID\": \"VMlqlQgBMEuslqRDcg2d\"\n}"
+								},
+								"url": {
+									"raw": ""
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": \"success\",\n    \"total\": 2,\n    \"quotes\": [\n        {\n            \"id\": \"quote123\",\n            \"patient\": \"VMlqlQgBMEuslqRDcg2d\",\n            \"medico\": \"IJqWXjUaJbelahmlTT2S15YM0Xx1\",\n            \"scheduledStart\": \"2025-03-01T09:00:00Z\",\n            \"scheduledEnd\": \"2025-03-01T09:30:00Z\",\n            \"type\": \"Consulta\",\n            \"motive\": \"Primera evaluación\",\n            \"status\": \"completada\"\n        },\n        {\n            \"id\": \"quote789\",\n            \"patient\": \"VMlqlQgBMEuslqRDcg2d\",\n            \"medico\": \"IJqWXjUaJbelahmlTT2S15YM0Xx1\",\n            \"scheduledStart\": \"2025-03-10T11:00:00Z\",\n            \"scheduledEnd\": \"2025-03-10T12:00:00Z\",\n            \"type\": \"Teleconsulta\",\n            \"motive\": \"Seguimiento\",\n            \"status\": \"pendiente\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Obtener Citas de un Día",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n    \"dayKey\": \"28-04-2025\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/getDayQuotesAPIV2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"getDayQuotesAPIV2"
+							]
+						},
+						"description": "Obtiene todas las citas programadas para un día específico. Las citas son devueltas ordenadas por hora de inicio."
+					},
+					"response": [
+						{
+							"name": "Respuesta Exitosa",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"orgID\": \"I1sUsHVoyEM78wO8y7g2\",\n    \"dayKey\": \"04-03-2025\"\n}"
+								},
+								"url": {
+									"raw": ""
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": \"success\",\n    \"total\": 3,\n    \"quotes\": [\n        {\n            \"id\": \"quote111\",\n            \"patientId\": \"patient111\",\n            \"userId\": \"IJqWXjUaJbelahmlTT2S15YM0Xx1\",\n            \"date\": \"04-03-2025\",\n            \"startDate\": \"2025-03-04T08:00:00Z\",\n            \"endDate\": \"2025-03-04T08:30:00Z\",\n            \"type\": \"Consulta\",\n            \"motive\": \"Control\",\n            \"status\": \"pendiente\",\n            \"version\": \"v2\",\n            \"locationId\": \"m7kl56yslu2i71k6yfi\",\n            \"history\": [...]\n        },\n        {\n            \"id\": \"quote222\",\n            \"patientId\": \"patient222\",\n            \"userId\": \"IJqWXjUaJbelahmlTT2S15YM0Xx1\",\n            \"date\": \"04-03-2025\",\n            \"startDate\": \"2025-03-04T09:30:00Z\",\n            \"endDate\": \"2025-03-04T10:00:00Z\",\n            \"type\": \"Teleconsulta\",\n            \"motive\": \"Control\",\n            \"status\": \"pendiente\",\n            \"version\": \"v2\",\n            \"locationId\": \"m7kl56yslu2i71k6yfi\",\n            \"history\": [...]\n        },\n        {\n            \"id\": \"quote333\",\n            \"patientId\": \"patient333\",\n            \"userId\": \"dTHltWaG9zYcjOLzbMM5RBBZgfB2\",\n            \"date\": \"04-03-2025\",\n            \"startDate\": \"2025-03-04T11:00:00Z\",\n            \"endDate\": \"2025-03-04T12:00:00Z\",\n            \"type\": \"Procedimiento\",\n            \"motive\": \"Procedimiento dental\",\n            \"status\": \"confirmada\",\n            \"version\": \"v2\",\n            \"locationId\": \"m7kl56yslu2i71k6yfi\",\n            \"history\": [...]\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Obtener Cita x id",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n    \"dayKey\": \"14-03-2025\",\n    \"citaID\": \"hB850SuxZXldTCZwk9cl\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/getDayQuotesAPIV2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"getDayQuotesAPIV2"
+							]
+						},
+						"description": "Obtiene todas las citas programadas para un día específico. Las citas son devueltas ordenadas por hora de inicio."
+					},
+					"response": [
+						{
+							"name": "Respuesta Exitosa",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n    \"dayKey\": \"14-03-2025\",\n    \"citaID\": \"hB850SuxZXldTCZwk9cl\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/getDayQuotesAPIV2",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"getDayQuotesAPIV2"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "X-Cloud-Trace-Context",
+									"value": "03317059334f19cc6853a872296474c5;o=1"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 14 Mar 2025 14:50:24 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "548"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": \"success\",\n    \"total\": 1,\n    \"quotes\": [\n        {\n            \"patientId\": \"hzlXjBaIMZxn2Az7xEeu\",\n            \"userId\": \"QI0H3vOu8rbeyAkXMG9WIDf9GRX2\",\n            \"date\": \"14-03-2025\",\n            \"startDate\": \"2025-03-14T02:05:00.000Z\",\n            \"endDate\": \"2025-03-14T03:05:00.000Z\",\n            \"type\": \"Consulta\",\n            \"motive\": \"Control mensual\",\n            \"status\": \"pendiente\",\n            \"version\": \"v2\",\n            \"locationId\": \"\",\n            \"history\": [\n                {\n                    \"action\": \"created\",\n                    \"timestamp\": {\n                        \"_seconds\": 1741963789,\n                        \"_nanoseconds\": 486000000\n                    },\n                    \"userId\": \"QI0H3vOu8rbeyAkXMG9WIDf9GRX2\"\n                }\n            ],\n            \"recipeID\": \"\",\n            \"createdAt\": {\n                \"_seconds\": 1741963790,\n                \"_nanoseconds\": 245000000\n            },\n            \"id\": \"hB850SuxZXldTCZwk9cl\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Obtener Citas de un Usuario x Día",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n    \"dayKey\": \"14-03-2025\",\n    \"userId\": \"QI0H3vOu8rbeyAkXMG9WIDf9GRX2\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/getDayQuotesAPIV2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"getDayQuotesAPIV2"
+							]
+						},
+						"description": "Obtiene todas las citas programadas para un día específico. Las citas son devueltas ordenadas por hora de inicio."
+					},
+					"response": [
+						{
+							"name": "Respuesta Exitosa",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n    \"dayKey\": \"14-03-2025\",\n    \"userId\": \"QI0H3vOu8rbeyAkXMG9WIDf9GRX2\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/getDayQuotesAPIV2",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"getDayQuotesAPIV2"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "X-Cloud-Trace-Context",
+									"value": "04d9e31e840779a62860a91cf7768701"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 14 Mar 2025 15:39:44 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "2570"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": \"success\",\n    \"total\": 5,\n    \"quotes\": [\n        {\n            \"patientId\": \"hzlXjBaIMZxn2Az7xEeu\",\n            \"userId\": \"QI0H3vOu8rbeyAkXMG9WIDf9GRX2\",\n            \"date\": \"14-03-2025\",\n            \"startDate\": \"2025-03-14T02:05:00.000Z\",\n            \"endDate\": \"2025-03-14T03:05:00.000Z\",\n            \"type\": \"Consulta\",\n            \"motive\": \"Control mensual\",\n            \"status\": \"pendiente\",\n            \"version\": \"v2\",\n            \"locationId\": \"\",\n            \"history\": [\n                {\n                    \"action\": \"created\",\n                    \"timestamp\": {\n                        \"_seconds\": 1741963789,\n                        \"_nanoseconds\": 486000000\n                    },\n                    \"userId\": \"QI0H3vOu8rbeyAkXMG9WIDf9GRX2\"\n                }\n            ],\n            \"recipeID\": \"\",\n            \"createdAt\": {\n                \"_seconds\": 1741963790,\n                \"_nanoseconds\": 245000000\n            },\n            \"id\": \"hB850SuxZXldTCZwk9cl\"\n        },\n        {\n            \"patientId\": \"IV2NfHOZ1hYomhG557Th\",\n            \"userId\": \"QI0H3vOu8rbeyAkXMG9WIDf9GRX2\",\n            \"date\": \"14-03-2025\",\n            \"startDate\": \"2025-03-14T11:00:00.000Z\",\n            \"endDate\": \"2025-03-14T12:00:00.000Z\",\n            \"type\": \"Consulta\",\n            \"motive\": \"Control mensual\",\n            \"status\": \"pendiente\",\n            \"version\": \"v2\",\n            \"locationId\": \"\",\n            \"history\": [\n                {\n                    \"action\": \"created\",\n                    \"timestamp\": {\n                        \"_seconds\": 1741843205,\n                        \"_nanoseconds\": 351000000\n                    },\n                    \"userId\": \"QI0H3vOu8rbeyAkXMG9WIDf9GRX2\"\n                }\n            ],\n            \"recipeID\": \"\",\n            \"createdAt\": {\n                \"_seconds\": 1741843205,\n                \"_nanoseconds\": 375000000\n            },\n            \"id\": \"kjnxOMV4Usr6QpHpos6J\"\n        },\n        {\n            \"patientId\": \"IV2NfHOZ1hYomhG557Th\",\n            \"userId\": \"QI0H3vOu8rbeyAkXMG9WIDf9GRX2\",\n            \"date\": \"14-03-2025\",\n            \"startDate\": \"2025-03-14T17:00:00.000Z\",\n            \"endDate\": \"2025-03-14T18:00:00.000Z\",\n            \"type\": \"Consulta\",\n            \"motive\": \"Control mensual\",\n            \"status\": \"pendiente\",\n            \"version\": \"v2\",\n            \"locationId\": \"\",\n            \"history\": [\n                {\n                    \"action\": \"created\",\n                    \"timestamp\": {\n                        \"_seconds\": 1741843184,\n                        \"_nanoseconds\": 352000000\n                    },\n                    \"userId\": \"QI0H3vOu8rbeyAkXMG9WIDf9GRX2\"\n                }\n            ],\n            \"recipeID\": \"\",\n            \"createdAt\": {\n                \"_seconds\": 1741843185,\n                \"_nanoseconds\": 197000000\n            },\n            \"id\": \"ul6kmhRj4K3B008wlECc\"\n        },\n        {\n            \"patientId\": \"IV2NfHOZ1hYomhG557Th\",\n            \"userId\": \"QI0H3vOu8rbeyAkXMG9WIDf9GRX2\",\n            \"date\": \"14-03-2025\",\n            \"startDate\": \"2025-03-15T01:00:00.000Z\",\n            \"endDate\": \"2025-03-15T02:00:00.000Z\",\n            \"type\": \"Consulta\",\n            \"motive\": \"Control mensual\",\n            \"status\": \"pendiente\",\n            \"version\": \"v2\",\n            \"locationId\": \"\",\n            \"history\": [\n                {\n                    \"action\": \"created\",\n                    \"timestamp\": {\n                        \"_seconds\": 1741844780,\n                        \"_nanoseconds\": 228000000\n                    },\n                    \"userId\": \"QI0H3vOu8rbeyAkXMG9WIDf9GRX2\"\n                }\n            ],\n            \"recipeID\": \"\",\n            \"createdAt\": {\n                \"_seconds\": 1741844781,\n                \"_nanoseconds\": 35000000\n            },\n            \"id\": \"JRsMWregOG2i0vgp3tgV\"\n        },\n        {\n            \"patientId\": \"vQT98cjEoGkHLRRrqUPh\",\n            \"userId\": \"QI0H3vOu8rbeyAkXMG9WIDf9GRX2\",\n            \"date\": \"14-03-2025\",\n            \"startDate\": \"2025-03-15T02:00:00.000Z\",\n            \"endDate\": \"2025-03-15T02:30:00.000Z\",\n            \"type\": \"consulta\",\n            \"motive\": \"endodoncia\",\n            \"status\": \"pendiente\",\n            \"version\": \"v2\",\n            \"locationId\": \"\",\n            \"history\": [\n                {\n                    \"action\": \"created\",\n                    \"timestamp\": {\n                        \"_seconds\": 1741895362,\n                        \"_nanoseconds\": 283000000\n                    },\n                    \"userId\": \"QI0H3vOu8rbeyAkXMG9WIDf9GRX2\"\n                }\n            ],\n            \"recipeID\": \"\",\n            \"createdAt\": {\n                \"_seconds\": 1741895362,\n                \"_nanoseconds\": 321000000\n            },\n            \"id\": \"xBe8OFuSnhcHNAEUCih5\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Obtener Slots Ocupados de Médico",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n    \"dayKey\": \"28-04-2025\",\n    \"format\": \"busy_ranges\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/getDayQuotesAPIV2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"getDayQuotesAPIV2"
+							]
+						},
+						"description": "Obtiene los slots de tiempo ocupados por un médico en un día específico. Los slots solapados se fusionan automáticamente para optimizar la respuesta."
+					},
+					"response": [
+						{
+							"name": "Respuesta Exitosa",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"orgID\": \"I1sUsHVoyEM78wO8y7g2\",\n    \"dayKey\": \"04-03-2025\",\n    \"medico\": \"IJqWXjUaJbelahmlTT2S15YM0Xx1\"\n}"
+								},
+								"url": {
+									"raw": ""
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"start\": \"2025-03-04T08:00:00Z\",\n        \"end\": \"2025-03-04T08:30:00Z\"\n    },\n    {\n        \"start\": \"2025-03-04T09:30:00Z\",\n        \"end\": \"2025-03-04T10:00:00Z\"\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "Obtener Slots Ocupados de Médico",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n    \"dayKey\": \"14-03-2025\",\n    \"userId\": \"QI0H3vOu8rbeyAkXMG9WIDf9GRX2\",\n    \"format\": \"busy_ranges\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/getDayQuotesAPIV2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"getDayQuotesAPIV2"
+							]
+						},
+						"description": "Obtiene los slots de tiempo ocupados por un médico en un día específico. Los slots solapados se fusionan automáticamente para optimizar la respuesta."
+					},
+					"response": [
+						{
+							"name": "Respuesta Exitosa",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n    \"dayKey\": \"14-03-2025\",\n    \"userId\": \"QI0H3vOu8rbeyAkXMG9WIDf9GRX2\",\n    \"format\": \"busy_ranges\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/getDayQuotesAPIV2",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"getDayQuotesAPIV2"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "X-Cloud-Trace-Context",
+									"value": "d626a7b34a37a27ae8b78efbe2f233fa;o=1"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 14 Mar 2025 15:40:31 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "326"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": \"success\",\n    \"total\": 4,\n    \"busy_ranges\": [\n        {\n            \"start\": \"2025-03-14T02:05:00.000Z\",\n            \"end\": \"2025-03-14T03:05:00.000Z\"\n        },\n        {\n            \"start\": \"2025-03-14T11:00:00.000Z\",\n            \"end\": \"2025-03-14T12:00:00.000Z\"\n        },\n        {\n            \"start\": \"2025-03-14T17:00:00.000Z\",\n            \"end\": \"2025-03-14T18:00:00.000Z\"\n        },\n        {\n            \"start\": \"2025-03-15T01:00:00.000Z\",\n            \"end\": \"2025-03-15T02:30:00.000Z\"\n        }\n    ]\n}"
+						}
+					]
+				}
+			],
+			"description": "Endpoints para crear, actualizar y eliminar citas médicas"
+		},
+		{
+			"name": "2. Gestión de Pacientes",
+			"item": [
+				{
+					"name": "Obtener Todos los Pacientes",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n    \"action\": \"getAll\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/managePatientsAPIV2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"managePatientsAPIV2"
+							]
+						},
+						"description": "Obtiene una lista de pacientes con paginación. Se puede especificar un límite y un punto de inicio para la paginación."
+					},
+					"response": [
+						{
+							"name": "Respuesta Exitosa",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"orgID\": \"I1sUsHVoyEM78wO8y7g2\",\n    \"action\": \"getAll\",\n    \"limit\": 50\n}"
+								},
+								"url": {
+									"raw": ""
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": \"success\",\n    \"total\": 2,\n    \"hasMore\": false,\n    \"lastDoc\": \"VMlqlQgBMEuslqRDcg2d\",\n    \"patients\": [\n        {\n            \"gender\": \"Masculino\",\n            \"dni\": \"12345678\",\n            \"mail\": \"juan@example.com\",\n            \"patient_id\": \"patient111\",\n            \"names\": \"Juan\",\n            \"nhc\": \"001\",\n            \"phone\": \"+51999888777\",\n            \"image\": \"\",\n            \"document_type\": \"DNI\",\n            \"birth_date\": \"1980-05-15\",\n            \"name\": \"Juan Pérez\",\n            \"search\": [\"juan\", \"juanperez\", \"perez\"],\n            \"disabled\": false,\n            \"created_at\": 1709632844,\n            \"document_number\": \"12345678\",\n            \"surnames\": \"Pérez\",\n            \"letter\": \"J\"\n        },\n        {\n            \"gender\": \"Femenino\",\n            \"dni\": \"98745632\",\n            \"mail\": \"\",\n            \"patient_id\": \"VMlqlQgBMEuslqRDcg2d\",\n            \"names\": \"Test\",\n            \"nhc\": \"\",\n            \"phone\": \"\",\n            \"image\": \"\",\n            \"document_type\": \"DNI\",\n            \"birth_date\": \"2000-03-11\",\n            \"name\": \"1 Test\",\n            \"search\": [\"1\", \"1test\", \"test\"],\n            \"disabled\": false,\n            \"created_at\": 1738215708854,\n            \"document_number\": \"\",\n            \"surnames\": \"1\",\n            \"letter\": \"1\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Buscar Pacientes",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n    \"action\": \"search\",\n    \"type\": \"nombre\",\n    \"text\": \"jose\",\n    \"limit\": 10\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/managePatientsAPIV2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"managePatientsAPIV2"
+							]
+						},
+						"description": "Busca pacientes por distintos criterios. Los tipos de búsqueda disponibles son: nombre, dni, pasaporte, cedula_identidad, carnet_extranjeria, otro."
+					},
+					"response": [
+						{
+							"name": "Respuesta Exitosa",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"orgID\": \"I1sUsHVoyEM78wO8y7g2\",\n    \"action\": \"search\",\n    \"type\": \"nombre\",\n    \"text\": \"test\",\n    \"limit\": 10\n}"
+								},
+								"url": {
+									"raw": ""
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": \"success\",\n    \"total\": 1,\n    \"patients\": [\n        {\n            \"gender\": \"Femenino\",\n            \"dni\": \"98745632\",\n            \"mail\": \"\",\n            \"patient_id\": \"VMlqlQgBMEuslqRDcg2d\",\n            \"names\": \"Test\",\n            \"nhc\": \"\",\n            \"phone\": \"\",\n            \"image\": \"\",\n            \"document_type\": \"DNI\",\n            \"birth_date\": \"2000-03-11\",\n            \"name\": \"1 Test\",\n            \"search\": [\"1\", \"1test\", \"test\"],\n            \"disabled\": false,\n            \"created_at\": 1738215708854,\n            \"document_number\": \"\",\n            \"surnames\": \"1\",\n            \"letter\": \"1\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Buscar Pacientes por Telefono",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n    \"action\": \"search\",\n    \"type\": \"telefono\",\n    \"text\": \"+51942627829\",\n    \"limit\": 10\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/managePatientsAPIV2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"managePatientsAPIV2"
+							]
+						},
+						"description": "Busca pacientes por distintos criterios. Los tipos de búsqueda disponibles son: nombre, dni, pasaporte, cedula_identidad, carnet_extranjeria, otro."
+					},
+					"response": [
+						{
+							"name": "Respuesta Exitosa",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n    \"action\": \"search\",\n    \"type\": \"telefono\",\n    \"text\": \"+51942627829\",\n    \"limit\": 10\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/managePatientsAPIV2",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"managePatientsAPIV2"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "X-Cloud-Trace-Context",
+									"value": "6ee0ffb6d26614e0260aa923b134cef3;o=1"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 14 Mar 2025 14:40:18 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "2631"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": \"success\",\n    \"total\": 6,\n    \"patients\": [\n        {\n            \"patient_id\": \"8X62JYbO6ilUc2poLibz\",\n            \"name\": \"Jose David Rodríguez López\",\n            \"names\": \"Jose David\",\n            \"surnames\": \"Rodríguez López\",\n            \"dni\": \"72752254\",\n            \"image\": \"-\",\n            \"birth_date\": \"1985-07-15\",\n            \"gender\": \"Masculino\",\n            \"disabled\": false,\n            \"search\": [\n                \"jose\",\n                \"josedavid\",\n                \"josedavidrodriguez\",\n                \"josedavidrodriguezlopez\",\n                \"david\",\n                \"davidrodriguez\",\n                \"davidrodriguezlopez\",\n                \"rodriguez\",\n                \"rodriguezlopez\",\n                \"lopez\"\n            ],\n            \"created_at\": 1741962995407,\n            \"mail\": \"jc.rodriguez@example.com\",\n            \"updated_at\": 1741963056365,\n            \"phone\": \"+51942627829\",\n            \"history\": [\n                {\n                    \"action\": \"created\",\n                    \"timestamp\": {\n                        \"_seconds\": 1741962995,\n                        \"_nanoseconds\": 407000000\n                    }\n                },\n                {\n                    \"action\": \"updated\",\n                    \"timestamp\": {\n                        \"_seconds\": 1741963017,\n                        \"_nanoseconds\": 96000000\n                    },\n                    \"userId\": \"system\"\n                },\n                {\n                    \"action\": \"updated\",\n                    \"timestamp\": {\n                        \"_seconds\": 1741963056,\n                        \"_nanoseconds\": 365000000\n                    },\n                    \"userId\": \"system\"\n                }\n            ]\n        },\n        {\n            \"image\": \"-\",\n            \"search\": [\n                \"renzo\",\n                \"renzoromero\",\n                \"romero\"\n            ],\n            \"names\": \"Renzo\",\n            \"gender\": \"Masculino\",\n            \"mail\": \"renzoromeroja@gmail.com\",\n            \"patient_id\": \"FEZyQE8PckCLJBgjVllE\",\n            \"birth_date\": \"2001-03-13\",\n            \"name\": \"Renzo Romero\",\n            \"disabled\": false,\n            \"surnames\": \"Romero\",\n            \"dni\": \"74997621\",\n            \"phone\": \"+51942627829\"\n        },\n        {\n            \"names\": \"DALTO\",\n            \"gender\": \"femenino\",\n            \"mail\": \"a@a.com\",\n            \"patient_id\": \"YNsOZBft59hYA9um8BpT\",\n            \"birth_date\": \"2023-08-02\",\n            \"disabled\": false,\n            \"surnames\": \"LOLO\",\n            \"dni\": \"72758151\",\n            \"image\": \"\",\n            \"search\": [\n                \"lolo\",\n                \"lolodalto\",\n                \"dalto\"\n            ],\n            \"document_number\": \"\",\n            \"phone\": \"+51942627829\",\n            \"nhc\": \"\",\n            \"name\": \"LOLO DALTO\",\n            \"document_type\": \"DNI\"\n        },\n        {\n            \"image\": \"\",\n            \"document_number\": \"\",\n            \"gender\": \"Femenino\",\n            \"birth_date\": \"2000-01-01\",\n            \"nhc\": \"\",\n            \"search\": [\n                \"benavente\",\n                \"benaventemelgar\",\n                \"benaventemelgarsinforosa\",\n                \"melgar\",\n                \"melgarsinforosa\",\n                \"sinforosa\"\n            ],\n            \"names\": \"SINFOROSA\",\n            \"patient_id\": \"hzlXjBaIMZxn2Az7xEeu\",\n            \"name\": \"BENAVENTE MELGAR SINFOROSA\",\n            \"disabled\": false,\n            \"surnames\": \"BENAVENTE MELGAR\",\n            \"dni\": \"41156799\",\n            \"document_type\": \"DNI\",\n            \"mail\": \"jose@doctoc.health\",\n            \"phone\": \"+51942627829\"\n        },\n        {\n            \"image\": \"none\",\n            \"search\": [\n                \"romero\",\n                \"romerozanabria\",\n                \"romerozanabriajose\",\n                \"romerozanabriajosedavid\",\n                \"zanabria\",\n                \"zanabriajose\",\n                \"zanabriajosedavid\",\n                \"jose\",\n                \"josedavid\",\n                \"david\"\n            ],\n            \"names\": \"JOSE DAVID\",\n            \"gender\": \"Masculino\",\n            \"patient_id\": \"t5Y66xj9AZichStuJ4AM\",\n            \"birth_date\": \"2001-07-03\",\n            \"name\": \"ROMERO ZANABRIA JOSE DAVID\",\n            \"disabled\": false,\n            \"surnames\": \"ROMERO ZANABRIA\",\n            \"dni\": \"72758155\",\n            \"document_number\": \"-\",\n            \"mail\": \"jose456lhyo@gmail.com\",\n            \"document_type\": \"DNI\",\n            \"image_type\": \"-\",\n            \"phone\": \"+51942627829\"\n        },\n        {\n            \"image\": \"-\",\n            \"search\": [\n                \"asdsa\",\n                \"asdsaasdasd\",\n                \"asdasd\"\n            ],\n            \"names\": \"asdsa\",\n            \"gender\": \"masculino\",\n            \"mail\": \"jose456lhyo@gmail.com\",\n            \"phone\": \"+51942627829\",\n            \"patient_id\": \"xcWvikG5wl7q72Uo5nuy\",\n            \"birth_date\": \"2012-06-01\",\n            \"name\": \"asdsa asdasd\",\n            \"disabled\": false,\n            \"surnames\": \"asdasd\",\n            \"dni\": \"67890922\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Buscar Pacientes por DNI",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n    \"action\": \"search\",\n    \"type\": \"dni\",\n    \"text\": \"72758155\",\n    \"limit\": 10\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/managePatientsAPIV2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"managePatientsAPIV2"
+							]
+						},
+						"description": "Busca pacientes por número de DNI. La búsqueda es exacta, así que debe proporcionarse el DNI completo."
+					},
+					"response": [
+						{
+							"name": "Respuesta Exitosa",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"orgID\": \"I1sUsHVoyEM78wO8y7g2\",\n    \"action\": \"search\",\n    \"type\": \"dni\",\n    \"text\": \"98745632\",\n    \"limit\": 10\n}"
+								},
+								"url": {
+									"raw": ""
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": \"success\",\n    \"total\": 1,\n    \"patients\": [\n        {\n            \"gender\": \"Femenino\",\n            \"dni\": \"98745632\",\n            \"mail\": \"\",\n            \"patient_id\": \"VMlqlQgBMEuslqRDcg2d\",\n            \"names\": \"Test\",\n            \"nhc\": \"\",\n            \"phone\": \"\",\n            \"image\": \"\",\n            \"document_type\": \"DNI\",\n            \"birth_date\": \"2000-03-11\",\n            \"name\": \"1 Test\",\n            \"search\": [\"1\", \"1test\", \"test\"],\n            \"disabled\": false,\n            \"created_at\": 1738215708854,\n            \"document_number\": \"\",\n            \"surnames\": \"1\",\n            \"letter\": \"1\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Buscar Pacientes por ID",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n    \"action\": \"search\",\n    \"type\": \"id\",\n    \"text\": \"8X62JYbO6ilUc2poLibz\",\n    \"limit\": 10\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/managePatientsAPIV2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"managePatientsAPIV2"
+							]
+						},
+						"description": "Busca pacientes por número de DNI. La búsqueda es exacta, así que debe proporcionarse el DNI completo."
+					},
+					"response": [
+						{
+							"name": "Respuesta Exitosa",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n    \"action\": \"search\",\n    \"type\": \"id\",\n    \"text\": \"8X62JYbO6ilUc2poLibz\",\n    \"limit\": 10\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/managePatientsAPIV2",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"managePatientsAPIV2"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "X-Cloud-Trace-Context",
+									"value": "d8de7d10aaa05ae03b2a68f149f61deb;o=1"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 14 Mar 2025 14:42:05 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "829"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": \"success\",\n    \"total\": 1,\n    \"patients\": [\n        {\n            \"patient_id\": \"8X62JYbO6ilUc2poLibz\",\n            \"name\": \"Jose David Rodríguez López\",\n            \"names\": \"Jose David\",\n            \"surnames\": \"Rodríguez López\",\n            \"dni\": \"72752254\",\n            \"image\": \"-\",\n            \"birth_date\": \"1985-07-15\",\n            \"gender\": \"Masculino\",\n            \"disabled\": false,\n            \"search\": [\n                \"jose\",\n                \"josedavid\",\n                \"josedavidrodriguez\",\n                \"josedavidrodriguezlopez\",\n                \"david\",\n                \"davidrodriguez\",\n                \"davidrodriguezlopez\",\n                \"rodriguez\",\n                \"rodriguezlopez\",\n                \"lopez\"\n            ],\n            \"created_at\": 1741962995407,\n            \"mail\": \"jc.rodriguez@example.com\",\n            \"updated_at\": 1741963056365,\n            \"phone\": \"+51942627829\",\n            \"history\": [\n                {\n                    \"action\": \"created\",\n                    \"timestamp\": {\n                        \"_seconds\": 1741962995,\n                        \"_nanoseconds\": 407000000\n                    }\n                },\n                {\n                    \"action\": \"updated\",\n                    \"timestamp\": {\n                        \"_seconds\": 1741963017,\n                        \"_nanoseconds\": 96000000\n                    },\n                    \"userId\": \"system\"\n                },\n                {\n                    \"action\": \"updated\",\n                    \"timestamp\": {\n                        \"_seconds\": 1741963056,\n                        \"_nanoseconds\": 365000000\n                    },\n                    \"userId\": \"system\"\n                }\n            ]\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Crear Paciente",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"action\": \"create\",\n  \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n  \"names\": \"Jose David\",\n  \"surnames\": \"Rodríguez López\",\n  \"dni\": \"72752254\",\n  \"birth_date\": \"1985-07-15\",\n  \"gender\": \"Masculino\",\n  \"phone\": \"+51942627829\",\n  \"mail\": \"jose@example.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://us-central1-doctoc-main.cloudfunctions.net/managePatientsAPIV2",
+							"protocol": "https",
+							"host": [
+								"us-central1-doctoc-main",
+								"cloudfunctions",
+								"net"
+							],
+							"path": [
+								"managePatientsAPIV2"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Respuesta Exitosa",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"action\": \"create\",\n  \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n  \"names\": \"Jose David\",\n  \"surnames\": \"Rodríguez López\",\n  \"dni\": \"72752254\",\n  \"birth_date\": \"1985-07-15\",\n  \"gender\": \"Masculino\",\n  \"phone\": \"+51942627829\",\n  \"mail\": \"jose@example.com\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://us-central1-doctoc-main.cloudfunctions.net/managePatientsAPIV2",
+									"protocol": "https",
+									"host": [
+										"us-central1-doctoc-main",
+										"cloudfunctions",
+										"net"
+									],
+									"path": [
+										"managePatientsAPIV2"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "X-Cloud-Trace-Context",
+									"value": "a70555e48f98c5a4619d7d147443bbca;o=1"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 14 Mar 2025 14:36:36 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "147"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": \"success\",\n    \"action\": \"create\",\n    \"patient_id\": \"8X62JYbO6ilUc2poLibz\",\n    \"message\": \"Patient 'Jose David Rodríguez López' created successfully.\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Editar Paciente",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"action\": \"update\",\n    \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n    \"patient_id\": \"8X62JYbO6ilUc2poLibz\",\n    \"phone\": \"+51942627829\",\n    \"mail\": \"jc.rodriguez@example.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://us-central1-doctoc-main.cloudfunctions.net/managePatientAPIV2",
+							"protocol": "https",
+							"host": [
+								"us-central1-doctoc-main",
+								"cloudfunctions",
+								"net"
+							],
+							"path": [
+								"managePatientAPIV2"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Respuesta Exitosa",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"action\": \"update\",\n    \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n    \"patient_id\": \"8X62JYbO6ilUc2poLibz\",\n    \"phone\": \"+34600789123\",\n    \"mail\": \"jc.rodriguez@example.com\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://us-central1-doctoc-main.cloudfunctions.net/managePatientAPIV2",
+									"protocol": "https",
+									"host": [
+										"us-central1-doctoc-main",
+										"cloudfunctions",
+										"net"
+									],
+									"path": [
+										"managePatientAPIV2"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "X-Cloud-Trace-Context",
+									"value": "734394950d0e10ba619d7d147443b97c;o=1"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 14 Mar 2025 14:36:57 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "116"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": \"success\",\n    \"action\": \"update\",\n    \"patient_id\": \"8X62JYbO6ilUc2poLibz\",\n    \"message\": \"Patient updated successfully.\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Eliminar Paciente",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"action\": \"delete\",\n    \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n    \"patient_id\": \"tbx9whNyUhokpVf5Q9oM\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://us-central1-doctoc-main.cloudfunctions.net/managePatientAPIV2",
+							"protocol": "https",
+							"host": [
+								"us-central1-doctoc-main",
+								"cloudfunctions",
+								"net"
+							],
+							"path": [
+								"managePatientAPIV2"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Respuesta Exitosa",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"action\": \"delete\",\n    \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n    \"patient_id\": \"tbx9whNyUhokpVf5Q9oM\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://us-central1-doctoc-main.cloudfunctions.net/managePatientAPIV2",
+									"protocol": "https",
+									"host": [
+										"us-central1-doctoc-main",
+										"cloudfunctions",
+										"net"
+									],
+									"path": [
+										"managePatientAPIV2"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "X-Cloud-Trace-Context",
+									"value": "dc8ca5e8240440d81874b297d7e3acb7;o=1"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 14 Mar 2025 14:38:26 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "114"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": \"success\",\n    \"action\": \"delete\",\n    \"patient_id\": \"tbx9whNyUhokpVf5Q9oM\",\n    \"message\": \"Patient marked as disabled.\"\n}"
+						}
+					]
+				}
+			],
+			"description": "Endpoints para obtener información de pacientes y realizar búsquedas"
+		},
+		{
+			"name": "3. Gestión de Usuarios",
+			"item": [
+				{
+					"name": "Obtener Información de Básica de Usuario",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"action\": \"get\",\n    \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n    \"uid\": \"ogDnuzQ0zCWY90SYq6zVP1OQ0rF2\",\n    \"type\": \"user\",\n    \"sections\": [\"basic\", \"professional\"]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/manageUserInfoAPIV2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"manageUserInfoAPIV2"
+							]
+						},
+						"description": "Obtiene información del perfil de un usuario. Se pueden solicitar secciones específicas: basic, professional, images, permissions, portalInfo."
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Información de Calendario de Usuario",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"action\": \"get\",\n    \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n    \"uid\": \"QI0H3vOu8rbeyAkXMG9WIDf9GRX2\",\n    \"type\": \"user\",\n    \"sections\": [\"calendarInfo\"]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/manageUserInfoAPIV2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"manageUserInfoAPIV2"
+							]
+						},
+						"description": "Obtiene información del perfil de un usuario. Se pueden solicitar secciones específicas: basic, professional, images, permissions, portalInfo."
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Información de Tipos",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"action\": \"get\",\n    \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n    \"sections\": [\"tipos\"]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/manageUserInfoAPIV2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"manageUserInfoAPIV2"
+							]
+						},
+						"description": "Obtiene información del perfil de un usuario. Se pueden solicitar secciones específicas: basic, professional, images, permissions, portalInfo."
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Información de Calendario",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"action\": \"update\",\n    \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n    \"uid\": \"QI0H3vOu8rbeyAkXMG9WIDf9GRX2\",\n    \"type\": \"user\",\n    \"data\": {\n        \"calendarInfo\": {\n            \"overschedule\": true\n        }\n    }\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/manageUserInfoAPIV2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"manageUserInfoAPIV2"
+							]
+						},
+						"description": "Actualiza la información del perfil de un usuario. Se pueden actualizar secciones específicas y campos individuales sin necesidad de enviar todo el perfil."
+					},
+					"response": []
+				},
+				{
+					"name": "Fijo con Tipos",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"action\": \"update\",\n    \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n    \"uid\": \"QI0H3vOu8rbeyAkXMG9WIDf9GRX2\",\n    \"type\": \"user\",\n    \"data\": {\n        \"calendarInfo\": {\n            \"configureByType\": true,\n            \"horarios\": {\n                \"sede_m7uzoolv_kypj0zbo\": {\n                    \"LKJwcXdPu4LEfckOevwy\": {\n                        \"horariesFijo\": {\n                            \"Tuesday\": [],\n                            \"Wednesday\": [],\n                            \"Thursday\": [],\n                            \"Friday\": [],\n                            \"Saturday\": [],\n                            \"Sunday\": [],\n                            \"Monday\": [\n                                {\n                                    \"id\": 1742441880693,\n                                    \"start\": \"08:00\",\n                                    \"end\": \"15:00\"\n                                },\n                                {\n                                    \"id\": 1742441810693,\n                                    \"start\": \"16:00\",\n                                    \"end\": \"17:00\"\n                                }\n                            ]\n                        }\n                    }\n                }\n            }\n        }\n    }\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/manageUserInfoAPIV2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"manageUserInfoAPIV2"
+							]
+						},
+						"description": "Actualiza los horarios de disponibilidad de un usuario. Se pueden actualizar los horarios de días específicos sin afectar otros días."
+					},
+					"response": []
+				},
+				{
+					"name": "Fijo sin Tipos",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"action\": \"update\",\n    \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n    \"uid\": \"QI0H3vOu8rbeyAkXMG9WIDf9GRX2\",\n    \"type\": \"user\",\n    \"data\": {\n        \"calendarInfo\": {\n            \"configureByType\": false,\n            \"horarios\": {\n                \"sede_m7uzoolv_kypj0zbo\": {\n                    \"default\": {\n                        \"horariesFijo\": {\n                            \"Tuesday\": [],\n                            \"Wednesday\": [],\n                            \"Thursday\": [],\n                            \"Friday\": [],\n                            \"Saturday\": [],\n                            \"Sunday\": [],\n                            \"Monday\": [\n                                {\n                                    \"id\": 1742441880693,\n                                    \"start\": \"08:00\",\n                                    \"end\": \"14:00\"\n                                }\n                            ]\n                        }\n                    }\n                }\n            }\n        }\n    }\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/manageUserInfoAPIV2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"manageUserInfoAPIV2"
+							]
+						},
+						"description": "Actualiza los horarios de disponibilidad de un usuario. Se pueden actualizar los horarios de días específicos sin afectar otros días."
+					},
+					"response": []
+				},
+				{
+					"name": "Dinámico sin Tipos",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"action\": \"update\",\n    \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n    \"uid\": \"QI0H3vOu8rbeyAkXMG9WIDf9GRX2\",\n    \"type\": \"user\",\n    \"data\": {\n        \"calendarInfo\": {\n            \"configureByType\": false,\n            \"horarios\": {\n                \"sede_m7uzp0b0_hdjy8j9v\": {\n                    \"default\": {\n                        \"horariesDinamico\": [\n                            {\n                                \"id\": 1742833449343,\n                                \"startDate\": \"2025-03-23\",\n                                \"endDate\": \"2025-03-24\",\n                                \"daySchedules\": {\n                                    \"2025-03-23\": [\n                                        {\n                                            \"id\": 1742833458194,\n                                            \"start\": \"08:00\",\n                                            \"end\": \"16:00\"\n                                        }\n                                    ]\n                                }\n                            }\n                        ]\n                    }\n                }\n            }\n        }\n    }\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/manageUserInfoAPIV2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"manageUserInfoAPIV2"
+							]
+						},
+						"description": "Actualiza los horarios de disponibilidad de un usuario. Se pueden actualizar los horarios de días específicos sin afectar otros días."
+					},
+					"response": []
+				},
+				{
+					"name": "Dinámico con Tipos",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"action\": \"update\",\n    \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n    \"uid\": \"QI0H3vOu8rbeyAkXMG9WIDf9GRX2\",\n    \"type\": \"user\",\n    \"data\": {\n        \"calendarInfo\": {\n            \"configureByType\": true,\n            \"horarios\": {\n                \"sede_m7uzp0b0_hdjy8j9v\": {\n                    \"LKJwcXdPu4LEfckOevwy\": {\n                        \"horariesDinamico\": [\n                            {\n                                \"id\": 1742833449343,\n                                \"startDate\": \"2025-03-23\",\n                                \"endDate\": \"2025-03-24\",\n                                \"daySchedules\": {\n                                    \"2025-03-23\": [\n                                        {\n                                            \"id\": 1742833458194,\n                                            \"start\": \"08:00\",\n                                            \"end\": \"13:00\"\n                                        }\n                                    ]\n                                }\n                            }\n                        ]\n                    }\n                }\n            }\n        }\n    }\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/manageUserInfoAPIV2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"manageUserInfoAPIV2"
+							]
+						},
+						"description": "Actualiza los horarios de disponibilidad de un usuario. Se pueden actualizar los horarios de días específicos sin afectar otros días."
+					},
+					"response": []
+				},
+				{
+					"name": "Tipos Asociados",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"action\": \"update\",\n    \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n    \"uid\": \"QI0H3vOu8rbeyAkXMG9WIDf9GRX2\",\n    \"type\": \"user\",\n    \"data\": {\n        \"calendarInfo\": {\n            \"associatedTypes\": {\n                \"LKJwcXdPu4LEfckOevwy\": 15\n            }\n        }\n    }\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/manageUserInfoAPIV2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"manageUserInfoAPIV2"
+							]
+						},
+						"description": "Actualiza los horarios de disponibilidad de un usuario. Se pueden actualizar los horarios de días específicos sin afectar otros días."
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints para gestionar información de usuarios\n\nDisponible: **basic, professional, images, permissions, calendarlInfo**\n\nType: user (calendario de usuarios)\n\nType: custom (calendarios de equipos, ubiaciones, etc)\n\nNota: Custom solo tiene calendarInfo"
+		},
+		{
+			"name": "4. Información de Organización",
+			"item": [
+				{
+					"name": "Obtener Información Básica",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n    \"sections\": [\n        \"basic\"\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/getOrgInfoAPIV2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"getOrgInfoAPIV2"
+							]
+						},
+						"description": "Obtiene información básica de la organización como nombre, razón social, RUC, etc."
+					},
+					"response": [
+						{
+							"name": "Respuesta Exitosa",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"orgID\": \"I1sUsHVoyEM78wO8y7g2\"\n}"
+								},
+								"url": {
+									"raw": ""
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"org_name\": \"Casa del Niño y de la Madre\",\n    \"org_razon_social\": \"Salazar SAC\",\n    \"org_ruc\": \"123456\",\n    \"org_description\": \"Nuestro objetivo es instaurar los estándares en atención de calidad hacía nuestros pacientes en toda la organización\",\n    \"org_role\": \"\",\n    \"org_web\": \"https://www.casadelninoylamadre.pe/\",\n    \"org_image\": \"https://firebasestorage.googleapis.com/v0/b/doctoc-test-f0d7b.appspot.com/o/media%2F5lk4yxsdrf8.png?alt=media&token=377be5e2-14f4-44af-8d8c-a17fd7a2bb0b\",\n    \"socialMedia\": {\n        \"facebook\": \"sad\",\n        \"twitter\": \"asd\",\n        \"linkedin\": \"ads\",\n        \"instagram\": \"asd\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Obtener Sedes",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n    \"sections\": [\n        \"sedes\"\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/getOrgInfoAPIV2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"getOrgInfoAPIV2"
+							]
+						},
+						"description": "Obtiene la lista de sedes de la organización con sus detalles."
+					},
+					"response": [
+						{
+							"name": "Obtener Sedes",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n    \"sections\": [\n        \"sedes\"\n    ]\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/getOrgInfoAPIV2",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"getOrgInfoAPIV2"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "X-Cloud-Trace-Context",
+									"value": "08686939230bc331bb0a2655d972b76a;o=1"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 04 Mar 2025 22:03:07 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "609"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"sedes\": [\n        {\n            \"id\": \"sede_m7uzoolv_kypj0zbo\",\n            \"nombre\": \"Principal\",\n            \"celular\": {\n                \"phoneNumber\": \"\",\n                \"isValidNumber\": false\n            },\n            \"correo\": \"cm@doctoc.health\",\n            \"pais\": \"\",\n            \"departamento\": \"\",\n            \"distrito\": \"\",\n            \"direccion\": \"31 de octubre Huancan\",\n            \"locationCoordinates\": {\n                \"lat\": -12.046374,\n                \"lng\": -77.042793\n            },\n            \"default\": true,\n            \"expanded\": true\n        },\n        {\n            \"id\": \"sede_m7uzp0b0_hdjy8j9v\",\n            \"nombre\": \"Huancayo\",\n            \"celular\": {\n                \"phoneNumber\": \"\",\n                \"isValidNumber\": false\n            },\n            \"correo\": \"\",\n            \"pais\": \"Peru\",\n            \"departamento\": \"Junín\",\n            \"distrito\": \"Huancayo\",\n            \"direccion\": \"Posta de Huancán\",\n            \"locationCoordinates\": {\n                \"lat\": -12.0283582,\n                \"lng\": -75.2277297\n            },\n            \"default\": false,\n            \"expanded\": true\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Obtener Especialidades",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n    \"sections\": [\n        \"specialties\"\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/getOrgInfoAPIV2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"getOrgInfoAPIV2"
+							]
+						},
+						"description": "Obtiene la lista de especialidades ofrecidas por la organización."
+					},
+					"response": [
+						{
+							"name": "Respuesta Exitosa",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"orgID\": \"I1sUsHVoyEM78wO8y7g2\",\n    \"sections\": [\"specialties\"]\n}"
+								},
+								"url": {
+									"raw": ""
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"specialties\": [\n        {\n            \"photo\": {\n                \"name\": \"Chequeo dental.avif\",\n                \"url\": \"https://firebasestorage.googleapis.com/v0/b/doctoc-test-f0d7b.appspot.com/o/media%2Fcz5abvfn17.avif?alt=media&token=e005bb61-d427-4de4-9198-0e7bf2a17856\",\n                \"type\": \"image\"\n            },\n            \"description\": \"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec interdum tellus sed nisl luctus placerat. \",\n            \"name\": \"Odontología Pediátrica\"\n        },\n        {...}\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Obtener Usuarios",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n    \"sections\": [\n        \"users\"\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/getOrgInfoAPIV2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"getOrgInfoAPIV2"
+							]
+						},
+						"description": "Obtiene la lista de usuarios de la organización con información básica."
+					},
+					"response": [
+						{
+							"name": "Respuesta Exitosa",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"orgID\": \"I1sUsHVoyEM78wO8y7g2\",\n    \"sections\": [\"users\"]\n}"
+								},
+								"url": {
+									"raw": ""
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"users\": [\n        {\n            \"uid\": \"IJqWXjUaJbelahmlTT2S15YM0Xx1\",\n            \"gender\": \"Masculino\",\n            \"role\": \"doctor\",\n            \"name\": \"Renzo Romero\",\n            \"specialty\": \"Doctor especializado , aaaaaaaaaaaaaa\",\n            \"disabled\": false,\n            \"photo\": \"https://firebasestorage.googleapis.com/v0/b/doctoc-test-f0d7b.appspot.com/o/dibujos%2Fimage.jpeg?alt=media&token=447e730e-13dc-4efc-9741-65d7a73169f3\"\n        },\n        {...}\n    ]\n}"
+						}
+					]
+				}
+			],
+			"description": "Endpoints para obtener información de la organización\n\nDisponible: **basic, gallery, sedes, services, specialties, users, stats**"
+		},
+		{
+			"name": "5. Gestión de Precios",
+			"item": [
+				{
+					"name": "Obtener Todos los Precios",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n    \"action\": \"prices\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/getPricesAPIV2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"getPricesAPIV2"
+							]
+						},
+						"description": "Obtiene la lista completa de precios configurados para la organización."
+					},
+					"response": [
+						{
+							"name": "Respuesta Exitosa",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"orgID\": \"I1sUsHVoyEM78wO8y7g2\",\n    \"action\": \"prices\"\n}"
+								},
+								"url": {
+									"raw": ""
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"total\": 15,\n    \"prices\": [\n        {\n            \"precio\": \"100\",\n            \"concepto\": \"Precio 1\",\n            \"id\": 7607056517568587,\n            \"categoria\": \"1246639180517494\",\n            \"person\": \"dTHltWaG9zYcjOLzbMM5RBBZgfB2\",\n            \"type\": \"Soles\",\n            \"last_update\": \"2024-06-08 17:18\",\n            \"register_date\": \"2024-06-08 17:18\",\n            \"categoryName\": \"Sin categoría\",\n            \"categoryColor\": \"gris\"\n        },\n        {...}\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Obtener Categorías",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n    \"action\": \"categories\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/getPricesAPIV2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"getPricesAPIV2"
+							]
+						},
+						"description": "Obtiene la lista de categorías de precios configuradas."
+					},
+					"response": [
+						{
+							"name": "Respuesta Exitosa",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"orgID\": \"I1sUsHVoyEM78wO8y7g2\",\n    \"action\": \"categories\"\n}"
+								},
+								"url": {
+									"raw": ""
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"categories\": [\n        {\n            \"description\": \"asdasd\",\n            \"color\": \"rosado\",\n            \"name\": \"cat 5\",\n            \"id\": 3746630053007887\n        },\n        {\n            \"color\": \"plomo\",\n            \"description\": \"asdasd\",\n            \"id\": 3648622655555886,\n            \"name\": \"cat 6\"\n        },\n        {\n            \"name\": \"Categoria prueba 2.0\",\n            \"description\": \"asdasd\",\n            \"color\": \"rojo\",\n            \"id\": 4626086923573276\n        },\n        {\n            \"description\": \"asdasd\",\n            \"id\": 3777043047377309,\n            \"color\": \"azul\",\n            \"name\": \"Categoria prueba 3.0\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Obtener Precios por Categoría",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n    \"action\": \"prices\",\n    \"categoriaID\": \"3777043047377309\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/getPricesAPIV2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"getPricesAPIV2"
+							]
+						},
+						"description": "Obtiene los precios filtrados por una categoría específica."
+					},
+					"response": [
+						{
+							"name": "Respuesta Exitosa",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"orgID\": \"I1sUsHVoyEM78wO8y7g2\",\n    \"action\": \"prices\",\n    \"categoriaID\": \"3777043047377309\"\n}"
+								},
+								"url": {
+									"raw": ""
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"total\": 1,\n    \"prices\": [\n        {\n            \"concepto\": \"precio azul\",\n            \"type\": \"Soles\",\n            \"last_update\": \"2024-10-09 14:11\",\n            \"person\": \"IJqWXjUaJbelahmlTT2S15YM0Xx1\",\n            \"register_date\": \"2024-10-09 14:11\",\n            \"id\": 5057532790718004,\n            \"categoria\": \"3777043047377309\",\n            \"precio\": \"500\",\n            \"categoryName\": \"Categoria prueba 3.0\",\n            \"categoryColor\": \"azul\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Obtener Precios y Categorías",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n    \"action\": \"both\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/getPricesAPIV2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"getPricesAPIV2"
+							]
+						},
+						"description": "Obtiene tanto la lista de precios como las categorías en una sola solicitud."
+					},
+					"response": [
+						{
+							"name": "Respuesta Exitosa",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"orgID\": \"I1sUsHVoyEM78wO8y7g2\",\n    \"action\": \"both\"\n}"
+								},
+								"url": {
+									"raw": ""
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"categories\": [\n        {\n            \"description\": \"asdasd\",\n            \"color\": \"rosado\",\n            \"name\": \"cat 5\",\n            \"id\": 3746630053007887\n        },\n        {...}\n    ],\n    \"total\": 15,\n    \"prices\": [\n        {\n            \"precio\": \"100\",\n            \"concepto\": \"Precio 1\",\n            \"id\": 7607056517568587,\n            \"categoryName\": \"Sin categoría\",\n            \"categoryColor\": \"gris\"\n        },\n        {...}\n    ]\n}"
+						}
+					]
+				}
+			],
+			"description": "Endpoints para gestionar precios y categorías"
+		},
+		{
+			"name": "6. Gestión de Pagos",
+			"item": [
+				{
+					"name": "Crear Pago/Recibo",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"action\": \"create\",\n    \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n    \"paymentData\": {\n        \"patient\": \"hzlXjBaIMZxn2Az7xEeu\",\n        \"medico\": \"QI0H3vOu8rbeyAkXMG9WIDf9GRX2\",\n        \"motive\": \"Consulta general\",\n        \"time\": \"2025-03-04\",\n        \"descuento\": 10,\n        \"igv\": 18,\n        \"moneda\": \"Soles\",\n        \"campos\": [\n            {\n                \"name\": \"Consulta médica\",\n                \"quantity\": 1,\n                \"price\": 150,\n                \"subTotal\": 150\n            },\n            {\n                \"name\": \"Análisis de sangre\",\n                \"quantity\": 1,\n                \"price\": 80,\n                \"subTotal\": 80\n            }\n        ],\n        \"pagos\": [\n            {\n                \"method\": \"Efectivo\",\n                \"amount\": \"220\",\n                \"moneda\": \"Soles\"\n            }\n        ],\n        \"person\": \"QI0H3vOu8rbeyAkXMG9WIDf9GRX2\",\n        \"sedeID\": \"\",\n        \"status\": \"completado\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/managePaymentAPIV2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"managePaymentAPIV2"
+							]
+						},
+						"description": "Crea un nuevo pago o recibo en el sistema. Incluye campos para registrar los productos o servicios, datos del paciente, método de pago, etc."
+					},
+					"response": [
+						{
+							"name": "Respuesta Exitosa",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"orgID\": \"I1sUsHVoyEM78wO8y7g2\",\n    \"paymentData\": {\n        \"medico\": \"IJqWXjUaJbelahmlTT2S15YM0Xx1\",\n        \"person\": \"IJqWXjUaJbelahmlTT2S15YM0Xx1\",\n        \"patient\": {\n            \"gender\": \"Femenino\",\n            \"dni\": \"98745632\",\n            \"patient_id\": \"VMlqlQgBMEuslqRDcg2d\",\n            \"name\": \"María Rodríguez\",\n            \"document_type\": \"DNI\"\n        },\n        \"motive\": \"Consulta médica\",\n        \"time\": \"2025-03-04\",\n        \"moneda\": \"Soles\",\n        \"igv\": 94.27,\n        \"campos\": [\n            {\n                \"id\": 0,\n                \"textContent\": \"Consulta general\",\n                \"unitPrice\": 423.73,\n                \"units\": 1,\n                \"subTotal\": 423.73,\n                \"category\": \"3777043047377309\",\n                \"subTotalIGV\": 500,\n                \"unitPriceIGV\": 500\n            }\n        ],\n        \"sedeID\": \"m7kl56yslu2i71k6yfi\",\n        \"paymentMethod\": \"Efectivo\",\n        \"amount\": 500\n    }\n}"
+								},
+								"url": {
+									"raw": ""
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": \"success\",\n    \"message\": \"Receipt created successfully\",\n    \"receiptID\": 3423281279000687,\n    \"receipt\": {\n        \"id\": 3423281279000687,\n        \"medico\": \"IJqWXjUaJbelahmlTT2S15YM0Xx1\",\n        \"patient\": {\n            \"gender\": \"Femenino\",\n            \"dni\": \"98745632\",\n            \"patient_id\": \"VMlqlQgBMEuslqRDcg2d\",\n            \"name\": \"María Rodríguez\",\n            \"document_type\": \"DNI\"\n        },\n        \"motive\": \"Consulta médica\",\n        \"descuento\": 0,\n        \"descuentoTotal\": 0,\n        \"time\": \"2025-03-04\",\n        \"files\": [],\n        \"person\": \"IJqWXjUaJbelahmlTT2S15YM0Xx1\",\n        \"register_date\": \"2025-03-04 15:04:23\",\n        \"last_update\": \"2025-03-04 15:04:23\",\n        \"moneda\": \"Soles\",\n        \"igv\": 94.27,\n        \"campos\": [\n            {\n                \"id\": 0,\n                \"textContent\": \"Consulta general\",\n                \"unitPrice\": 423.73,\n                \"units\": 1,\n                \"subTotal\": 423.73,\n                \"category\": \"3777043047377309\",\n                \"subTotalIGV\": 500,\n                \"unitPriceIGV\": 500\n            }\n        ],\n        \"pagos\": [\n            {\n                \"id\": 6551198597685075,\n                \"recipe\": \"3423281279000687\",\n                \"moneda\": \"Soles\",\n                \"person\": \"IJqWXjUaJbelahmlTT2S15YM0Xx1\",\n                \"amount\": \"500\",\n                \"method\": \"Efectivo\",\n                \"textContent\": \"2025-03-04\",\n                \"pago_register_time\": \"2025-03-04 15:04:23\",\n                \"pago_lastUpdate_time\": \"2025-03-04 15:04:23\",\n                \"cuenta_banco\": \"\",\n                \"categoria\": \"\"\n            }\n        ],\n        \"versions\": [],\n        \"billing\": {\n            \"billingState\": false,\n            \"initializated\": false,\n            \"typeDocument\": \"\",\n            \"aditionalInformation\": \"\",\n            \"company\": \"\",\n            \"rucCompany\": \"\",\n            \"domicilio_fiscal_company\": \"\",\n            \"clientData\": {\n                \"entityName\": \"\",\n                \"typeIdent\": \"\",\n                \"numberIdent\": \"\",\n                \"address\": \"\",\n                \"mail\": \"\",\n                \"phone\": \"\",\n                \"ubigeoClient\": \"\"\n            },\n            \"detraccion\": {\n                \"codigo\": \"\",\n                \"porcentaje\": \"\",\n                \"valor_porcentaje\": \"\",\n                \"monto\": 0,\n                \"codigo_metodo_pago\": \"\",\n                \"nombre_cuenta_bancaria\": \"\",\n                \"cuenta_bancaria\": \"\"\n            },\n            \"dues\": [\n                {\n                    \"id\": 0,\n                    \"cuota\": \"Cuota0\",\n                    \"date\": \"\",\n                    \"amount\": \"\"\n                }\n            ],\n            \"officialDocuments\": {}\n        },\n        \"sedeID\": \"m7kl56yslu2i71k6yfi\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Pagos x paciente",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n  \"patientID\": \"hzlXjBaIMZxn2Az7xEeu\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/getPatientPaymentsAPIV2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"getPatientPaymentsAPIV2"
+							]
+						},
+						"description": "Crea un nuevo pago o recibo en el sistema. Incluye campos para registrar los productos o servicios, datos del paciente, método de pago, etc."
+					},
+					"response": [
+						{
+							"name": "Respuesta Exitosa",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n  \"patientID\": \"hzlXjBaIMZxn2Az7xEeu\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/getPatientPaymentsAPIV2",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"getPatientPaymentsAPIV2"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "vary",
+									"value": "Origin"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "X-Cloud-Trace-Context",
+									"value": "7c7df6ab366c17f1a5dbcca92d1cf2f4"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 04 Mar 2025 23:33:34 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Google Frontend"
+								},
+								{
+									"key": "Content-Length",
+									"value": "1023"
+								},
+								{
+									"key": "Alt-Svc",
+									"value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": \"success\",\n    \"total\": 1,\n    \"totalAmount\": 220,\n    \"pendingAmount\": 0,\n    \"payments\": [\n        {\n            \"files\": [],\n            \"id\": \"REC8smHDUFZXvpit7py2\",\n            \"patient\": \"hzlXjBaIMZxn2Az7xEeu\",\n            \"medico\": \"QI0H3vOu8rbeyAkXMG9WIDf9GRX2\",\n            \"motive\": \"Consulta general\",\n            \"time\": \"2025-03-04\",\n            \"descuento\": 10,\n            \"subtotal\": 230,\n            \"total\": 220,\n            \"moneda\": \"Soles\",\n            \"igv\": 18,\n            \"campos\": [\n                {\n                    \"name\": \"Consulta médica\",\n                    \"quantity\": 1,\n                    \"price\": 150,\n                    \"subTotal\": 150\n                },\n                {\n                    \"name\": \"Análisis de sangre\",\n                    \"quantity\": 1,\n                    \"price\": 80,\n                    \"subTotal\": 80\n                }\n            ],\n            \"person\": \"QI0H3vOu8rbeyAkXMG9WIDf9GRX2\",\n            \"status\": \"completado\",\n            \"sedeID\": \"\",\n            \"register_date\": \"2025-03-04 23:30\",\n            \"last_update\": \"2025-03-04 23:30\",\n            \"versions\": [\n                {\n                    \"timestamp\": \"2025-03-04 23:30\",\n                    \"action\": \"create\",\n                    \"createdBy\": \"QI0H3vOu8rbeyAkXMG9WIDf9GRX2\"\n                }\n            ],\n            \"pagos\": [\n                {\n                    \"id\": \"pago_1741131042281_y7x60qgpj\",\n                    \"receiptId\": \"REC8smHDUFZXvpit7py2\",\n                    \"moneda\": \"Soles\",\n                    \"person\": \"QI0H3vOu8rbeyAkXMG9WIDf9GRX2\",\n                    \"amount\": \"220\",\n                    \"method\": \"Efectivo\",\n                    \"textContent\": \"2025-03-04\",\n                    \"pago_register_time\": \"2025-03-04 23:30\",\n                    \"pago_lastUpdate_time\": \"2025-03-04 23:30\",\n                    \"cuenta_banco\": \"\",\n                    \"categoria\": \"\"\n                }\n            ]\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Pagos x día",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"orgID\": \"rFQpBRoNGiv0V9KnHZV6\",\n  \"date\": \"2025-03-04\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/getDayPaymentsAPIV2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"getDayPaymentsAPIV2"
+							]
+						},
+						"description": "Crea un nuevo pago o recibo en el sistema. Incluye campos para registrar los productos o servicios, datos del paciente, método de pago, etc."
+					},
+					"response": [
+						{
+							"name": "Respuesta Exitosa",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"orgID\": \"I1sUsHVoyEM78wO8y7g2\",\n    \"paymentData\": {\n        \"medico\": \"IJqWXjUaJbelahmlTT2S15YM0Xx1\",\n        \"person\": \"IJqWXjUaJbelahmlTT2S15YM0Xx1\",\n        \"patient\": {\n            \"gender\": \"Femenino\",\n            \"dni\": \"98745632\",\n            \"patient_id\": \"VMlqlQgBMEuslqRDcg2d\",\n            \"name\": \"María Rodríguez\",\n            \"document_type\": \"DNI\"\n        },\n        \"motive\": \"Consulta médica\",\n        \"time\": \"2025-03-04\",\n        \"moneda\": \"Soles\",\n        \"igv\": 94.27,\n        \"campos\": [\n            {\n                \"id\": 0,\n                \"textContent\": \"Consulta general\",\n                \"unitPrice\": 423.73,\n                \"units\": 1,\n                \"subTotal\": 423.73,\n                \"category\": \"3777043047377309\",\n                \"subTotalIGV\": 500,\n                \"unitPriceIGV\": 500\n            }\n        ],\n        \"sedeID\": \"m7kl56yslu2i71k6yfi\",\n        \"paymentMethod\": \"Efectivo\",\n        \"amount\": 500\n    }\n}"
+								},
+								"url": {
+									"raw": ""
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": \"success\",\n    \"message\": \"Receipt created successfully\",\n    \"receiptID\": 3423281279000687,\n    \"receipt\": {\n        \"id\": 3423281279000687,\n        \"medico\": \"IJqWXjUaJbelahmlTT2S15YM0Xx1\",\n        \"patient\": {\n            \"gender\": \"Femenino\",\n            \"dni\": \"98745632\",\n            \"patient_id\": \"VMlqlQgBMEuslqRDcg2d\",\n            \"name\": \"María Rodríguez\",\n            \"document_type\": \"DNI\"\n        },\n        \"motive\": \"Consulta médica\",\n        \"descuento\": 0,\n        \"descuentoTotal\": 0,\n        \"time\": \"2025-03-04\",\n        \"files\": [],\n        \"person\": \"IJqWXjUaJbelahmlTT2S15YM0Xx1\",\n        \"register_date\": \"2025-03-04 15:04:23\",\n        \"last_update\": \"2025-03-04 15:04:23\",\n        \"moneda\": \"Soles\",\n        \"igv\": 94.27,\n        \"campos\": [\n            {\n                \"id\": 0,\n                \"textContent\": \"Consulta general\",\n                \"unitPrice\": 423.73,\n                \"units\": 1,\n                \"subTotal\": 423.73,\n                \"category\": \"3777043047377309\",\n                \"subTotalIGV\": 500,\n                \"unitPriceIGV\": 500\n            }\n        ],\n        \"pagos\": [\n            {\n                \"id\": 6551198597685075,\n                \"recipe\": \"3423281279000687\",\n                \"moneda\": \"Soles\",\n                \"person\": \"IJqWXjUaJbelahmlTT2S15YM0Xx1\",\n                \"amount\": \"500\",\n                \"method\": \"Efectivo\",\n                \"textContent\": \"2025-03-04\",\n                \"pago_register_time\": \"2025-03-04 15:04:23\",\n                \"pago_lastUpdate_time\": \"2025-03-04 15:04:23\",\n                \"cuenta_banco\": \"\",\n                \"categoria\": \"\"\n            }\n        ],\n        \"versions\": [],\n        \"billing\": {\n            \"billingState\": false,\n            \"initializated\": false,\n            \"typeDocument\": \"\",\n            \"aditionalInformation\": \"\",\n            \"company\": \"\",\n            \"rucCompany\": \"\",\n            \"domicilio_fiscal_company\": \"\",\n            \"clientData\": {\n                \"entityName\": \"\",\n                \"typeIdent\": \"\",\n                \"numberIdent\": \"\",\n                \"address\": \"\",\n                \"mail\": \"\",\n                \"phone\": \"\",\n                \"ubigeoClient\": \"\"\n            },\n            \"detraccion\": {\n                \"codigo\": \"\",\n                \"porcentaje\": \"\",\n                \"valor_porcentaje\": \"\",\n                \"monto\": 0,\n                \"codigo_metodo_pago\": \"\",\n                \"nombre_cuenta_bancaria\": \"\",\n                \"cuenta_bancaria\": \"\"\n            },\n            \"dues\": [\n                {\n                    \"id\": 0,\n                    \"cuota\": \"Cuota0\",\n                    \"date\": \"\",\n                    \"amount\": \"\"\n                }\n            ],\n            \"officialDocuments\": {}\n        },\n        \"sedeID\": \"m7kl56yslu2i71k6yfi\"\n    }\n}"
+						}
+					]
+				}
+			],
+			"description": "Endpoints para manejar pagos y recibos"
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "PRk2P5dbYptiss5w2U8jdVPu9DAHXcoWmFrl3lDmGMthqfgtjePvJk6MacyiPPlK",
+				"type": "string"
+			}
+		]
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "https://us-central1-doctoc-main.cloudfunctions.net",
+			"type": "string"
+		}
+	]
+}
