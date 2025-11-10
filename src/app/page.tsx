@@ -1,7 +1,7 @@
 'use client';
 
-import PublicHomepage from '../presentation/components/pages/PublicHomepage';
+import { LandingPage } from '../presentation/components/pages/LandingPage';
 
 export default function HomePage() {
-  return <PublicHomepage />;
+  return <LandingPage />;
 }

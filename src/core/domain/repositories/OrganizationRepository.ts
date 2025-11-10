@@ -1,25 +1,16 @@
 import { Organization } from '../entities/Organization';
-import {
-  GetOrganizationBasicInfoRequestDTO,
-  GetOrganizationLocationsRequestDTO
-} from '../../application/dto/organization.dto';
 
 // Repository interface para la gestión de información de organizaciones
 export interface OrganizationRepository {
-  // Información básica de la organización
-  getBasicInfo(request: GetOrganizationBasicInfoRequestDTO): Promise<Organization | null>;
+  // Obtener información completa de la organización
+  getOrganizationInfo(orgId: string): Promise<Organization>;
   
-  // Gestión de sedes/locaciones
-  getLocations(request: GetOrganizationLocationsRequestDTO): Promise<Array<{
-    locationId: string;
-    name: string;
-    address?: string;
-    phone?: string;
-    description?: string;
-    isActive?: boolean;
-  }>>;
+  // Obtener solo información básica
+  getBasicInfo(orgId: string): Promise<Partial<Organization>>;
   
-  // Consultas específicas
-  getAllOrganizations(): Promise<Organization[]>;
-  exists(orgID: string): Promise<boolean>;
+  // Obtener sedes/ubicaciones
+  getLocations(orgId: string): Promise<Organization['locations']>;
+  
+  // Obtener especialidades
+  getSpecialties(orgId: string): Promise<Organization['specialties']>;
 }
