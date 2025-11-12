@@ -31,19 +31,19 @@ export const SpecialtiesSection = ({
   };
 
   return (
-    <section className="py-16 lg:py-24 bg-gray-50">
+    <section className="py-16 lg:py-24 bg-linear-to-br from-gray-800 via-gray-900 to-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-16">
           <div className="flex justify-center mb-6">
-            <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center">
-              <Stethoscope className="w-8 h-8 text-blue-600" />
+            <div className="w-16 h-16 bg-green-500/20 rounded-2xl flex items-center justify-center">
+              <Stethoscope className="w-8 h-8 text-green-400" />
             </div>
           </div>
-          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">
             Nuestras Especialidades
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
             Contamos con doctores expertos en diversas áreas médicas para brindarte 
             la mejor atención especializada que necesitas.
           </p>
@@ -53,10 +53,10 @@ export const SpecialtiesSection = ({
         {isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {Array.from({ length: 8 }).map((_, index) => (
-              <Card key={index} className="p-6 animate-pulse">
-                <div className="w-16 h-16 bg-gray-200 rounded-2xl mb-4"></div>
-                <div className="h-4 bg-gray-200 rounded mb-2"></div>
-                <div className="h-3 bg-gray-200 rounded w-3/4"></div>
+              <Card key={index} className="p-6 animate-pulse bg-gray-800 border-gray-700">
+                <div className="w-16 h-16 bg-gray-700 rounded-2xl mb-4"></div>
+                <div className="h-4 bg-gray-700 rounded mb-2"></div>
+                <div className="h-3 bg-gray-700 rounded w-3/4"></div>
               </Card>
             ))}
           </div>
@@ -67,7 +67,7 @@ export const SpecialtiesSection = ({
               {displayedSpecialties.map((specialty, index) => (
                 <Card 
                   key={index}
-                  className="p-6 hover:shadow-lg transition-all duration-300 cursor-pointer group border-l-4 border-l-blue-500"
+                  className="p-6 bg-gray-800 border-gray-700 hover:bg-gray-700 hover:shadow-xl transition-all duration-300 cursor-pointer group border-l-4 border-l-green-500"
                   onClick={() => handleSpecialtyClick(specialty)}
                 >
                   {/* Icon/Image */}
@@ -83,25 +83,25 @@ export const SpecialtiesSection = ({
                         />
                       </div>
                     ) : (
-                      <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center">
-                        <Stethoscope className="w-8 h-8 text-blue-600" />
+                      <div className="w-16 h-16 bg-green-500/20 rounded-2xl flex items-center justify-center">
+                        <Stethoscope className="w-8 h-8 text-green-400" />
                       </div>
                     )}
                   </div>
 
                   {/* Content */}
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+                  <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-green-400 transition-colors">
                     {specialty.name}
                   </h3>
                   
                   {specialty.description && (
-                    <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                    <p className="text-sm text-gray-400 mb-3 line-clamp-2">
                       {specialty.description}
                     </p>
                   )}
 
                   {/* Action */}
-                  <div className="flex items-center text-blue-600 text-sm font-medium group-hover:text-blue-700">
+                  <div className="flex items-center text-green-400 text-sm font-medium group-hover:text-green-300">
                     Ver doctores
                     <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
                   </div>
@@ -113,8 +113,13 @@ export const SpecialtiesSection = ({
             <div className="text-center">
               <Button 
                 size="lg"
-                onClick={() => window.location.href = '/doctors/search'}
-                className="px-8 py-4 text-lg"
+                onClick={() => {
+                  const element = document.getElementById('buscador-doctores');
+                  if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
+                className="px-8 py-4 text-lg bg-green-500 hover:bg-green-600 text-white"
               >
                 Ver Todas las Especialidades
                 <ChevronRight className="w-5 h-5 ml-2" />

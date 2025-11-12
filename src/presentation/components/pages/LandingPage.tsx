@@ -1,7 +1,7 @@
 'use client';
 
 import { useOrganization } from '../../hooks/useOrganization';
-import { HeroSection, SpecialtiesSection, LocationsSection } from '../features/landing';
+import { HeroSection, SpecialtiesSection, LocationsSection, DoctorSearchSection } from '../features/landing';
 import { Navigation, Footer } from '../layouts';
 import Link from 'next/link';
 
@@ -54,7 +54,12 @@ export const LandingPage = ({ orgId }: LandingPageProps) => {
         organizationName={basicInfo?.name || organization?.name}
         description={basicInfo?.description || organization?.description}
         logo={basicInfo?.logo || organization?.logo}
-        onSearchDoctors={() => window.location.href = '/doctors/browse'}
+        onSearchDoctors={() => {
+          const element = document.getElementById('buscador-doctores');
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+          }
+        }}
       />
 
       {/* Especialidades Section */}
@@ -62,9 +67,12 @@ export const LandingPage = ({ orgId }: LandingPageProps) => {
         <SpecialtiesSection 
           specialties={specialties || organization?.specialties || []}
           isLoading={isLoading}
-          onSpecialtyClick={(specialty) => {
-            // Redirigir a página pública de doctores con filtro
-            window.location.href = `/doctors/browse?specialty=${encodeURIComponent(specialty.name)}`;
+          onSpecialtyClick={() => {
+            // Redirigir al buscador de doctores integrado con filtro
+            const element = document.getElementById('buscador-doctores');
+            if (element) {
+              element.scrollIntoView({ behavior: 'smooth' });
+            }
           }}
         />
       </section>
@@ -77,13 +85,16 @@ export const LandingPage = ({ orgId }: LandingPageProps) => {
         />
       </section>
 
+      {/* Buscador de Doctores Section */}
+      <DoctorSearchSection orgId={orgId} />
+
       {/* Stats & Footer CTA */}
-      <section className="bg-linear-to-r from-blue-600 to-blue-800 py-16">
+      <section className="bg-linear-to-br from-gray-900 via-gray-800 to-gray-900 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
           <h2 className="text-3xl lg:text-4xl font-bold mb-8">
             ¿Listo para cuidar tu salud?
           </h2>
-          <p className="text-xl text-blue-100 mb-8 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
             Miles de pacientes confían en nosotros. Agenda tu cita hoy mismo y únete 
             a nuestra comunidad de salud y bienestar.
           </p>
@@ -91,36 +102,36 @@ export const LandingPage = ({ orgId }: LandingPageProps) => {
           {/* Stats */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-12">
             <div>
-              <div className="text-4xl lg:text-5xl font-bold mb-2">
+              <div className="text-4xl lg:text-5xl font-bold mb-2 text-green-400">
                 {organization?.doctors?.length || '100+'}
               </div>
-              <div className="text-blue-200">Doctores Especialistas</div>
+              <div className="text-gray-400">Doctores Especialistas</div>
             </div>
             <div>
-              <div className="text-4xl lg:text-5xl font-bold mb-2">
+              <div className="text-4xl lg:text-5xl font-bold mb-2 text-green-400">
                 {organization?.specialties?.length || '20+'}
               </div>
-              <div className="text-blue-200">Especialidades Médicas</div>
+              <div className="text-gray-400">Especialidades Médicas</div>
             </div>
             <div>
-              <div className="text-4xl lg:text-5xl font-bold mb-2">
+              <div className="text-4xl lg:text-5xl font-bold mb-2 text-green-400">
                 {organization?.locations?.length || '5+'}
               </div>
-              <div className="text-blue-200">Sedes Disponibles</div>
+              <div className="text-gray-400">Sedes Disponibles</div>
             </div>
           </div>
 
           {/* Final CTA */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/doctors/browse"
-              className="px-8 py-4 bg-white text-blue-700 font-semibold rounded-lg hover:bg-blue-50 transition-colors"
+            <a
+              href="#buscador-doctores"
+              className="px-8 py-4 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 transition-colors"
             >
-              Ver Doctores
-            </Link>
+              Buscar Doctores
+            </a>
             <Link
-              href="/login" 
-              className="px-8 py-4 bg-transparent border-2 border-white text-white font-semibold rounded-lg hover:bg-white/10 transition-colors"
+              href="/#buscador-doctores" 
+              className="px-8 py-4 bg-transparent border-2 border-green-500 text-green-400 font-semibold rounded-lg hover:bg-green-500 hover:text-white transition-colors"
             >
               Agendar Cita
             </Link>

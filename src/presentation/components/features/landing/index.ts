@@ -2,3 +2,4 @@
 export { HeroSection } from './HeroSection';
 export { SpecialtiesSection } from './SpecialtiesSection';
 export { LocationsSection } from './LocationsSection';
+export { DoctorSearchSection } from './DoctorSearchSection';

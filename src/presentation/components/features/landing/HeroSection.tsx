@@ -29,11 +29,12 @@ export const HeroSection = ({
   };
 
   return (
-    <section className="relative bg-linear-to-br from-blue-600 via-blue-700 to-blue-800 overflow-hidden">
+    <section className="relative bg-linear-to-br from-gray-900 via-gray-800 to-gray-900 overflow-hidden">
       {/* Background Pattern */}
-      <div className="absolute inset-0 bg-black/10">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full -translate-y-32 translate-x-32"></div>
-        <div className="absolute bottom-0 left-0 w-80 h-80 bg-white/5 rounded-full translate-y-32 -translate-x-32"></div>
+      <div className="absolute inset-0">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-green-500/10 rounded-full -translate-y-32 translate-x-32"></div>
+        <div className="absolute bottom-0 left-0 w-80 h-80 bg-green-500/10 rounded-full translate-y-32 -translate-x-32"></div>
+        <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-green-500/5 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
@@ -57,7 +58,7 @@ export const HeroSection = ({
             </div>
 
             {/* Description */}
-            <p className="text-xl lg:text-2xl text-blue-100 mb-8 leading-relaxed">
+            <p className="text-xl lg:text-2xl text-gray-300 mb-8 leading-relaxed">
               {description}
             </p>
 
@@ -66,7 +67,7 @@ export const HeroSection = ({
               <Button 
                 onClick={handleSearchClick}
                 size="lg"
-                className="bg-white text-blue-700 hover:bg-blue-50 px-8 py-4 text-lg font-semibold"
+                className="bg-green-500 text-white hover:bg-green-600 px-8 py-4 text-lg font-semibold"
               >
                 <Calendar className="w-5 h-5 mr-2" />
                 Ver Doctores
@@ -76,8 +77,8 @@ export const HeroSection = ({
               <Button 
                 variant="outline"
                 size="lg"
-                onClick={() => router.push('/login')}
-                className="border-white text-blue-700 hover:text-white hover:bg-white/10 px-8 py-4 text-lg font-semibold"
+                onClick={handleSearchClick}
+                className="border-green-500 text-green-500 hover:text-white hover:bg-green-500 px-8 py-4 text-lg font-semibold"
               >
                 <Users className="w-5 h-5 mr-2" />
                 Agendar Cita
@@ -87,16 +88,16 @@ export const HeroSection = ({
             {/* Quick Stats */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
               <div className="text-center sm:text-left">
-                <div className="text-3xl font-bold mb-1">100+</div>
-                <div className="text-blue-200">Doctores Especialistas</div>
+                <div className="text-3xl font-bold mb-1 text-green-400">100+</div>
+                <div className="text-gray-400">Doctores Especialistas</div>
               </div>
               <div className="text-center sm:text-left">
-                <div className="text-3xl font-bold mb-1">20+</div>
-                <div className="text-blue-200">Especialidades</div>
+                <div className="text-3xl font-bold mb-1 text-green-400">20+</div>
+                <div className="text-gray-400">Especialidades</div>
               </div>
               <div className="text-center sm:text-left">
-                <div className="text-3xl font-bold mb-1">5+</div>
-                <div className="text-blue-200">Ubicaciones</div>
+                <div className="text-3xl font-bold mb-1 text-green-400">5+</div>
+                <div className="text-gray-400">Ubicaciones</div>
               </div>
             </div>
           </div>

@@ -168,7 +168,7 @@ export class DoctocApi {
 
   async updatePatient(request: UpdatePatientRequestDTO): Promise<UpdatePatientResponseDTO> {
     return this.client.post<UpdatePatientRequestDTO, UpdatePatientResponseDTO>(
-      API_ENDPOINTS.PATIENTS.MANAGE_SINGLE, // Nota: endpoint singular
+      API_ENDPOINTS.PATIENTS.MANAGE, // Usar el endpoint principal
       request
     );
   }
