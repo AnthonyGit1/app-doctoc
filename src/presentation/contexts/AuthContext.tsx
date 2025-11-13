@@ -2,6 +2,15 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword, 
+  signOut, 
+  onAuthStateChanged,
+  updateProfile,
+  User as FirebaseUser 
+} from 'firebase/auth';
+import { auth } from '../../lib/firebase';
 import { DoctocApiClient } from '../../infrastructure/api/api-client';
 import { DoctocApi } from '../../infrastructure/api/doctoc-api';
 import { API_CONFIG } from '../../config/constants';
@@ -20,7 +29,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<boolean>;
   register: (email: string, password: string, name: string) => Promise<boolean>;
-  logout: () => void;
+  logout: () => Promise<void>;
   redirectToLogin: (returnUrl?: string) => void;
 }
 
@@ -44,190 +53,110 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const router = useRouter();
 
   useEffect(() => {
-    // Simular verificación de sesión desde localStorage o cookie
-    const checkAuth = async () => {
-      try {
-        const userData = localStorage.getItem('user');
-        if (userData) {
-          setUser(JSON.parse(userData));
-        }
-      } catch (error) {
-        console.error('Error checking auth:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser: FirebaseUser | null) => {
+      if (firebaseUser) {
+        // Usuario autenticado, crear información básica primero
+        const userInfo: User = {
+          uid: firebaseUser.uid,
+          email: firebaseUser.email || undefined,
+          name: firebaseUser.displayName || undefined,
+          displayName: firebaseUser.displayName || undefined,
+          orgID: API_CONFIG.DEFAULT_ORG_ID
+        };
 
-    checkAuth();
+        // Establecer usuario inmediatamente con datos de Firebase
+        setUser(userInfo);
+
+        // Solo buscar información adicional en la API si no tenemos displayName
+        if (!firebaseUser.displayName && firebaseUser.email) {
+          try {
+            const doctocApi = new DoctocApi(new DoctocApiClient());
+            const searchResult = await doctocApi.searchPatients({
+              action: 'search' as const,
+              orgID: API_CONFIG.DEFAULT_ORG_ID,
+              type: 'nombre' as const,
+              text: firebaseUser.email,
+              limit: 10
+            });
+
+            const patientFound = searchResult?.patients?.find(p => 
+              p.mail?.toLowerCase() === firebaseUser.email?.toLowerCase()
+            );
+
+            if (patientFound) {
+              const names = patientFound.names || '';
+              const surnames = patientFound.surnames || '';
+              const fullDisplayName = names && surnames ? `${names} ${surnames}`.trim() : patientFound.name;
+
+              if (fullDisplayName) {
+                setUser(prev => prev ? {
+                  ...prev,
+                  name: patientFound.name || prev.name,
+                  displayName: fullDisplayName
+                } : null);
+              }
+            }
+          } catch (apiError) {
+            console.warn('Error obteniendo información del paciente:', apiError);
+            // No hacer nada más, mantener la información de Firebase
+          }
+        }
+      } else {
+        setUser(null);
+      }
+      setIsLoading(false);
+    });
+
+    return () => unsubscribe();
   }, []);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const login = async (email: string, _password: string): Promise<boolean> => {
+  const login = async (email: string, password: string): Promise<boolean> => {
     try {
-      // Buscar el paciente en la API para obtener su nombre completo real
-      let patientName = 'Usuario'; // Fallback por si no se encuentra
-      let fullDisplayName = 'Usuario'; // Nombre completo (names + surnames)
-      let patientId = 'QI0H3vOu8rbeyAkXMG9WIDf9GRX2'; // ID por defecto
-      
-      try {
-        const doctocApi = new DoctocApi(new DoctocApiClient());
-        const ORG_ID = API_CONFIG.DEFAULT_ORG_ID;
-
-        // Primero intentar búsqueda directa por email
-        const searchResult = await doctocApi.searchPatients({
-          action: 'search' as const,
-          orgID: ORG_ID,
-          type: 'nombre' as const,
-          text: email,
-          limit: 10
-        });
-        
-        let patientFound = null;
-        if (searchResult?.patients?.length > 0) {
-          patientFound = searchResult.patients.find(p => 
-            p.mail?.toLowerCase() === email.toLowerCase()
-          );
-        }
-
-        // Si no se encuentra por búsqueda directa, buscar en todos los pacientes
-        if (!patientFound) {
-          try {
-            const allPatientsResult = await doctocApi.getAllPatients({
-              action: 'getAll' as const,
-              orgID: ORG_ID,
-              limit: 50
-            });
-            
-            if (allPatientsResult?.patients?.length > 0) {
-              patientFound = allPatientsResult.patients.find(p => 
-                p.mail?.toLowerCase() === email.toLowerCase()
-              );
-            }
-          } catch (error) {
-            console.warn('Error obteniendo todos los pacientes:', error);
-          }
-        }
-
-        // Si se encontró el paciente, usar su información real completa
-        if (patientFound) {
-          // Usar name como base, pero construir displayName completo
-          patientName = patientFound.name || 'Usuario';
-          
-          // Construir nombre completo: names + surnames
-          const names = patientFound.names || '';
-          const surnames = patientFound.surnames || '';
-          
-          if (names && surnames) {
-            fullDisplayName = `${names} ${surnames}`.trim();
-          } else if (names) {
-            fullDisplayName = names;
-          } else if (surnames) {
-            fullDisplayName = surnames;
-          } else {
-            fullDisplayName = patientFound.name || patientName;
-          }
-          
-          patientId = patientFound.patient_id || patientId;
-          console.log('Paciente encontrado:', { 
-            name: patientName, 
-            fullName: fullDisplayName, 
-            id: patientId,
-            names: names,
-            surnames: surnames
-          });
-        } else {
-          console.warn('Paciente no encontrado en la API, usando nombre del email');
-          // Formatear el nombre del email como fallback
-          const emailName = email.split('@')[0].replace(/[._-]/g, ' ');
-          patientName = emailName.split(' ').map(word => 
-            word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-          ).join(' ');
-          fullDisplayName = patientName;
-        }
-      } catch (apiError) {
-        console.error('Error buscando paciente en la API:', apiError);
-        // Usar nombre del email como fallback
-        const emailName = email.split('@')[0].replace(/[._-]/g, ' ');
-        patientName = emailName.split(' ').map(word => 
-          word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-        ).join(' ');
-        fullDisplayName = patientName;
-      }
-      
-      const mockUser: User = {
-        uid: patientId,
-        email,
-        name: patientName,
-        displayName: fullDisplayName, // Nombre completo real del usuario
-        orgID: API_CONFIG.DEFAULT_ORG_ID
-      };
-      
-      setUser(mockUser);
-      localStorage.setItem('user', JSON.stringify(mockUser));
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      console.log('Usuario logueado correctamente:', userCredential.user.email);
       return true;
-    } catch (error) {
-      console.error('Login error:', error);
-      return false;
+    } catch (error: unknown) {
+      console.error('Error en login:', error);
+      throw error; // Lanzar el error para que el componente pueda manejarlo
     }
   };
 
-  const register = async (email: string, _password: string, name: string): Promise<boolean> => {
+  const register = async (email: string, password: string, name: string): Promise<boolean> => {
     try {
-      // TODO: Implementar registro real con la API de Doctoc
-      // Por ahora simulamos registro + creación de paciente
-      const mockUser: User = {
-        uid: 'newuser_' + Date.now(), // ID temporal
-        email,
-        name,
+      // Crear usuario en Firebase
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      
+      // Actualizar el perfil con el nombre
+      await updateProfile(userCredential.user, {
+        displayName: name
+      });
+
+      // Actualizar el estado local inmediatamente con la información correcta
+      const newUser: User = {
+        uid: userCredential.user.uid,
+        email: userCredential.user.email || undefined,
+        name: name,
         displayName: name,
         orgID: API_CONFIG.DEFAULT_ORG_ID
       };
-
-      // Crear el paciente automáticamente al registrarse
-      try {
-        const createPatientResponse = await fetch('/api/patients', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            action: 'create',
-            orgID: mockUser.orgID,
-            uid: mockUser.uid,
-            name: name,
-            email: email,
-            phone: '', // Opcional por ahora
-            documentType: 'dni',
-            documentNumber: '', // Se puede completar después
-            birthDate: '', // Se puede completar después
-            address: '', // Se puede completar después
-            emergencyContact: {
-              name: '',
-              phone: ''
-            }
-          })
-        });
-
-        if (!createPatientResponse.ok) {
-          console.warn('No se pudo crear el paciente automáticamente, pero el usuario se registró');
-        }
-      } catch (patientError) {
-        console.warn('Error al crear paciente automáticamente:', patientError);
-      }
       
-      setUser(mockUser);
-      localStorage.setItem('user', JSON.stringify(mockUser));
+      setUser(newUser);
+
+      console.log('Usuario registrado correctamente:', userCredential.user.email);
       return true;
-    } catch (error) {
-      console.error('Register error:', error);
-      return false;
+    } catch (error: unknown) {
+      console.error('Error en registro:', error);
+      throw error; // Lanzar el error para que el componente pueda manejarlo
     }
   };
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('user');
-    router.push('/');
+  const logout = async (): Promise<void> => {
+    try {
+      await signOut(auth);
+      router.push('/');
+    } catch (error) {
+      console.error('Error en logout:', error);
+    }
   };
 
   const redirectToLogin = (returnUrl?: string) => {
