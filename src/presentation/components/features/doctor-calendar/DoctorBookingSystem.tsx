@@ -24,6 +24,8 @@ interface DoctorBookingSystemProps {
       [day: string]: Array<{
         startTime: string;
         endTime: string;
+        sedeId: string;
+        sedeName: string;
       }>;
     };
   };
@@ -57,6 +59,7 @@ export const DoctorBookingSystem = ({
   const [selectedTime, setSelectedTime] = useState<string>("");
   const [selectedType, setSelectedType] = useState<string>("");
   const [motive, setMotive] = useState<string>("");
+  const [selectedSedeId, setSelectedSedeId] = useState<string>("");
 
   const {
     isAuthenticated,
@@ -101,8 +104,23 @@ export const DoctorBookingSystem = ({
 
   // Generar fechas disponibles
   const getAvailableDates = () => {
-    const dates = [];
+    const dates: Array<{
+      date: string;
+      displayDate: string;
+      dayName: string;
+      sedeId: string;
+      sedeName: string;
+      sedeDistrito?: string;
+      sedeDepartamento?: string;
+      sedeDireccion?: string;
+    }> = [];
     const today = new Date();
+
+    // Verificar que existan horarios fijos
+    if (!horarios?.fijos) {
+      console.warn('No hay horarios fijos disponibles');
+      return dates;
+    }
 
     for (let i = 1; i <= 14; i++) {
       const date = new Date(today);
@@ -111,19 +129,37 @@ export const DoctorBookingSystem = ({
       const dayName = date
         .toLocaleDateString("en-US", { weekday: "long" })
         .toLowerCase();
+      
       const hasSchedule =
         horarios.fijos?.[dayName] && horarios.fijos[dayName].length > 0;
 
       if (hasSchedule) {
-        dates.push({
-          date: date.toISOString().split("T")[0],
-          displayDate: date.toLocaleDateString("es-ES", {
-            weekday: "short",
-            day: "numeric",
-            month: "short",
-          }),
-          dayName: DAYS_MAP[dayName as keyof typeof DAYS_MAP] || dayName,
-        });
+        // Obtener la información de la sede correcta para este día
+        const daySchedules = horarios.fijos?.[dayName] || [];
+        
+        // Encontrar la sede que realmente tiene horarios para este día
+        const sedeInfo = daySchedules.find(schedule => schedule.startTime && schedule.endTime);
+        
+        if (sedeInfo) {
+          // Buscar el nombre real de la sede en los datos de la API
+          const realSedeInfo = sedes.find(sede => sede.id === sedeInfo.sedeId);
+          const sedeName = realSedeInfo?.nombre || sedeInfo.sedeName || 'Sede Principal';
+          
+          dates.push({
+            date: date.toISOString().split("T")[0],
+            displayDate: date.toLocaleDateString("es-ES", {
+              weekday: "short",
+              day: "numeric",
+              month: "short",
+            }),
+            dayName: DAYS_MAP[dayName as keyof typeof DAYS_MAP] || dayName,
+            sedeId: sedeInfo.sedeId,
+            sedeName: sedeName,
+            sedeDistrito: realSedeInfo?.distrito,
+            sedeDepartamento: realSedeInfo?.departamento,
+            sedeDireccion: realSedeInfo?.direccion,
+          });
+        }
       }
     }
 
@@ -131,16 +167,43 @@ export const DoctorBookingSystem = ({
   };
 
   const getAvailableSlots = () => {
-    const selectedDateObj = new Date(selectedDate);
+    // Parsear la fecha correctamente sin problemas de zona horaria
+    const [year, month, day] = selectedDate.split('-').map(Number);
+    const selectedDateObj = new Date(year, month - 1, day);
+    
     const dayNameEn = selectedDateObj
       .toLocaleDateString("en-US", { weekday: "long" })
       .toLowerCase();
-    return horarios.fijos?.[dayNameEn] || [];
+    
+    // Obtener todos los horarios del día
+    const daySchedules = horarios.fijos?.[dayNameEn] || [];
+    
+    // Intentar filtrar por sede seleccionada
+    let filteredSchedules = selectedSedeId 
+      ? daySchedules.filter(schedule => schedule.sedeId === selectedSedeId)
+      : daySchedules;
+    
+    // Si no hay horarios para la sede seleccionada, mostrar todos los del día
+    if (filteredSchedules.length === 0) {
+      filteredSchedules = daySchedules;
+    }
+    
+    return filteredSchedules;
   };
 
   const handleLogin = () => {
     const currentUrl = `/doctor/${doctor.id}/calendar`;
     redirectToLogin(currentUrl);
+  };
+
+  const handleDateSelect = (dateString: string) => {
+    setSelectedDate(dateString);
+    
+    // Encontrar la sede para la fecha seleccionada
+    const selectedDateInfo = availableDates.find(d => d.date === dateString);
+    if (selectedDateInfo) {
+      setSelectedSedeId(selectedDateInfo.sedeId);
+    }
   };
 
   const handleCreateAppointment = async () => {
@@ -150,9 +213,11 @@ export const DoctorBookingSystem = ({
       return;
     }
 
-    // Obtener la sede por defecto o la primera disponible
-    const defaultSede = sedes.find((s) => s.default) || sedes[0];
-    if (!defaultSede) {
+    // Usar la sede seleccionada en lugar de la sede por defecto
+    const selectedSede = sedes.find((s) => s.id === selectedSedeId) || 
+                        sedes.find((s) => s.default) || 
+                        sedes[0];
+    if (!selectedSede) {
       toast.error("No hay sedes disponibles");
       return;
     }
@@ -187,7 +252,7 @@ export const DoctorBookingSystem = ({
       type: selectedTypeData.name,
       typeId: selectedTypeData.id,
       motive: motive.trim(),
-      locationId: defaultSede.id,
+      locationId: selectedSede.id,
     };
 
     const success = await createAppointment(appointmentData);
@@ -201,6 +266,7 @@ export const DoctorBookingSystem = ({
 
   const resetForm = () => {
     setSelectedDate("");
+    setSelectedSedeId("");
     setSelectedTime("");
     setSelectedType("");
     setMotive("");
@@ -305,6 +371,15 @@ export const DoctorBookingSystem = ({
 
   // Pantalla de resumen
   if (currentStep === "summary") {
+    // Obtener la información de la sede seleccionada
+    const selectedSedeInfo = sedes.find(sede => sede.id === selectedSedeId);
+    const sedeForSummary = selectedSedeInfo ? {
+      id: selectedSedeInfo.id,
+      name: selectedSedeInfo.nombre || 'Sede Principal',
+      distrito: selectedSedeInfo.distrito,
+      departamento: selectedSedeInfo.departamento
+    } : undefined;
+
     return (
       <AppointmentSummary
         doctor={doctor}
@@ -312,6 +387,7 @@ export const DoctorBookingSystem = ({
         selectedTime={selectedTime}
         selectedType={selectedTypeData}
         motive={motive}
+        selectedSede={sedeForSummary}
         onConfirm={handleCreateAppointment}
         onBack={() => setCurrentStep("motive")}
         isCreating={isCreating}
@@ -395,7 +471,7 @@ export const DoctorBookingSystem = ({
             <DateSelector
               availableDates={availableDates}
               selectedDate={selectedDate}
-              onDateSelect={setSelectedDate}
+              onDateSelect={handleDateSelect}
             />
 
             <div className="mt-8 flex justify-end">

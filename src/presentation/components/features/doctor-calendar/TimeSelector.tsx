@@ -1,16 +1,22 @@
 'use client';
 
+import { useEffect } from 'react';
 import { Clock } from 'lucide-react';
+import { useBusyRanges } from '../../../hooks/useBusyRanges';
+import { API_CONFIG } from '../../../../config/constants';
 
 interface TimeSlot {
   time: string;
   isAvailable: boolean;
+  isBusy: boolean; // Nuevo campo para indicar si está ocupado
 }
 
 interface TimeSelectorProps {
   availableSlots: Array<{
     startTime: string;
     endTime: string;
+    sedeId?: string;
+    sedeName?: string;
   }>;
   selectedTime: string;
   onTimeSelect: (time: string) => void;
@@ -18,6 +24,20 @@ interface TimeSelectorProps {
 }
 
 export const TimeSelector = ({ availableSlots, selectedTime, onTimeSelect, selectedDate }: TimeSelectorProps) => {
+  const { getBusyRanges, isTimeSlotBusy } = useBusyRanges({
+    orgID: API_CONFIG.DEFAULT_ORG_ID
+  });
+
+  // Cargar los slots ocupados cuando cambia la fecha seleccionada
+  useEffect(() => {
+    if (selectedDate) {
+      // Convertir fecha de YYYY-MM-DD a DD-MM-YYYY para el API
+      const [year, month, day] = selectedDate.split('-');
+      const dayKey = `${day}-${month}-${year}`;
+      getBusyRanges(dayKey);
+    }
+  }, [selectedDate, getBusyRanges]);
+
   // Generar slots de tiempo cada 30 minutos dentro de los rangos disponibles
   const generateTimeSlots = (): TimeSlot[] => {
     const slots: TimeSlot[] = [];
@@ -37,9 +57,13 @@ export const TimeSelector = ({ availableSlots, selectedTime, onTimeSelect, selec
         // Verificar si hay al menos 30 minutos disponibles desde este punto
         const hasEnoughTime = (currentTime + 30) <= endTime;
         
+        // Verificar si el slot está ocupado
+        const isBusy = selectedDate ? isTimeSlotBusy(selectedDate, timeString) : false;
+        
         slots.push({
           time: timeString,
-          isAvailable: hasEnoughTime
+          isAvailable: hasEnoughTime && !isBusy,
+          isBusy: isBusy
         });
         
         currentTime += 30; // Incrementar 30 minutos
@@ -106,6 +130,8 @@ export const TimeSelector = ({ availableSlots, selectedTime, onTimeSelect, selec
                   ? 'bg-linear-to-br from-green-500 to-emerald-600 text-white shadow-xl shadow-green-500/50 transform scale-105'
                   : slot.isAvailable
                   ? 'bg-linear-to-br from-slate-700/80 to-slate-800/80 text-gray-300 hover:bg-linear-to-br hover:from-purple-600/30 hover:to-purple-700/30 border border-slate-600 hover:border-purple-500/50 hover:text-purple-300'
+                  : slot.isBusy
+                  ? 'bg-linear-to-br from-red-800/50 to-red-900/50 text-red-400 cursor-not-allowed opacity-60 border border-red-700/50'
                   : 'bg-linear-to-br from-gray-800/50 to-gray-900/50 text-gray-500 cursor-not-allowed opacity-40 border border-gray-700/50'
               }`}
             >
@@ -114,10 +140,15 @@ export const TimeSelector = ({ availableSlots, selectedTime, onTimeSelect, selec
                   selectedTime === slot.time 
                     ? 'text-white' 
                     : slot.isAvailable 
-                      ? 'text-gray-400 group-hover:text-purple-400' 
+                      ? 'text-gray-400 group-hover:text-purple-400'
+                    : slot.isBusy
+                      ? 'text-red-400'
                       : 'text-gray-600'
                 }`} />
                 <div>{slot.time}</div>
+                {slot.isBusy && (
+                  <div className="text-xs text-red-300 mt-1">Ocupado</div>
+                )}
               </div>
               
               {/* Efecto de brillo para el botón seleccionado */}

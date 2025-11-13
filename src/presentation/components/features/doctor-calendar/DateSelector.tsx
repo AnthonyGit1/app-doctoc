@@ -7,6 +7,11 @@ interface DateSelectorProps {
     date: string;
     displayDate: string;
     dayName: string;
+    sedeId: string;
+    sedeName: string;
+    sedeDistrito?: string;
+    sedeDepartamento?: string;
+    sedeDireccion?: string;
   }>;
   selectedDate: string;
   onDateSelect: (date: string) => void;
@@ -49,10 +54,29 @@ export const DateSelector = ({ availableDates, selectedDate, onDateSelect }: Dat
           >
             <div className="relative z-10">
               <div className="font-bold text-xl mb-2">{dateInfo.displayDate}</div>
-              <div className={`text-sm capitalize ${
+              <div className={`text-sm capitalize mb-2 ${
                 selectedDate === dateInfo.date ? 'text-green-300' : 'text-gray-400'
               }`}>
                 {dateInfo.dayName}
+              </div>
+              
+              {/* Información de la sede */}
+              <div className={`space-y-1 ${
+                selectedDate === dateInfo.date ? 'text-green-200' : 'text-gray-500'
+              }`}>
+                <div className="text-xs font-medium">
+                  📍 {dateInfo.sedeName}
+                </div>
+                {(dateInfo.sedeDistrito || dateInfo.sedeDepartamento) && (
+                  <div className="text-xs">
+                    🏢 {dateInfo.sedeDistrito && `${dateInfo.sedeDistrito}, `}{dateInfo.sedeDepartamento || 'Lima'}
+                  </div>
+                )}
+                {dateInfo.sedeDireccion && (
+                  <div className="text-xs">
+                    📍 {dateInfo.sedeDireccion}
+                  </div>
+                )}
               </div>
             </div>
             

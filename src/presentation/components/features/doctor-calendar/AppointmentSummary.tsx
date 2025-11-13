@@ -19,6 +19,12 @@ interface AppointmentSummaryProps {
   selectedTime: string;
   selectedType: AppointmentType | null;
   motive: string;
+  selectedSede?: {
+    id: string;
+    name: string;
+    distrito?: string;
+    departamento?: string;
+  };
   onConfirm: () => void;
   onBack: () => void;
   isCreating: boolean;
@@ -30,12 +36,16 @@ export const AppointmentSummary = ({
   selectedTime,
   selectedType,
   motive,
+  selectedSede,
   onConfirm,
   onBack,
   isCreating
 }: AppointmentSummaryProps) => {
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
+    // Parsear la fecha correctamente sin problemas de zona horaria
+    const [year, month, day] = dateString.split('-').map(Number);
+    const date = new Date(year, month - 1, day);
+    
     return date.toLocaleDateString('es-ES', {
       weekday: 'long',
       year: 'numeric',
@@ -84,6 +94,29 @@ export const AppointmentSummary = ({
               </div>
             </div>
           </div>
+
+          {/* Sede */}
+          {selectedSede && (
+            <div className="bg-linear-to-r from-cyan-500/10 to-teal-500/10 border border-cyan-500/20 rounded-2xl p-6 shadow-lg">
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 bg-linear-to-br from-cyan-500 to-teal-600 rounded-2xl flex items-center justify-center shadow-lg shadow-cyan-500/30">
+                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-cyan-400 text-sm font-semibold mb-1">SEDE DE ATENCIÓN</p>
+                  <p className="text-2xl font-bold text-white">{selectedSede.name}</p>
+                  {(selectedSede.distrito || selectedSede.departamento) && (
+                    <p className="text-cyan-200 text-sm mt-1">
+                      {selectedSede.distrito && selectedSede.distrito + ', '}{selectedSede.departamento || 'Lima'}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Fecha y hora en grid mejorado */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

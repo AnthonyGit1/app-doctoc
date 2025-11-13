@@ -16,6 +16,8 @@ export interface CalendarInfo {
         [day: string]: Array<{
           startTime: string;
           endTime: string;
+          sedeId: string;
+          sedeName: string;
         }>;
       };
       dinamicos?: Array<{
@@ -26,6 +28,8 @@ export interface CalendarInfo {
           [day: string]: Array<{
             startTime: string;
             endTime: string;
+            sedeId: string;
+            sedeName: string;
           }>;
         };
       }>;

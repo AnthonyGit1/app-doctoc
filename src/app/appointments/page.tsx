@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { usePatientAppointments } from '../../presentation/hooks/usePatientAppointments';
+import { useOrganization } from '../../presentation/hooks/useOrganization';
 import SidebarLayout from '../../presentation/components/layouts/SidebarLayout';
 import { API_CONFIG } from '../../config/constants';
 import {
@@ -14,7 +15,10 @@ import {
   Plus,
   Filter,
   Eye,
-  X
+  X,
+  Building,
+  Phone,
+  Mail
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -64,10 +68,18 @@ export default function AppointmentsPage() {
     orgID: API_CONFIG.DEFAULT_ORG_ID
   });
 
+  const { locations } = useOrganization(API_CONFIG.DEFAULT_ORG_ID);
+
   useEffect(() => {
     console.log('🔄 useEffect triggered, calling getMyAppointments...');
     getMyAppointments();
   }, [getMyAppointments]);
+
+  // Función para obtener los datos de sede por ID
+  const getSedeData = (locationId: string) => {
+    if (!locations || !locationId) return null;
+    return locations.find(location => location.id === locationId);
+  };
 
   // Filtrar citas según el filtro seleccionado
   const filteredAppointments = appointments.filter(appointment => {
@@ -430,119 +442,134 @@ export default function AppointmentsPage() {
             </div>
 
             {/* Contenido del modal mejorado */}
-            <div className="p-8 space-y-8">
-              {/* Información principal con diseño mejorado */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div className="space-y-6">
-                  <div className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700">
-                    <label className="block text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wide">Fecha de la Cita</label>
-                    <div className="flex items-center gap-4">
-                      <div className="p-3 bg-green-500/20 rounded-xl">
-                        <Calendar className="w-6 h-6 text-green-400" />
-                      </div>
-                      <div>
-                        <p className="text-xl font-bold text-white">{formatDate(selectedAppointment.scheduledStart)}</p>
-                        <p className="text-gray-400">Día programado</p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700">
-                    <label className="block text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wide">Horario</label>
-                    <div className="flex items-center gap-4">
-                      <div className="p-3 bg-blue-500/20 rounded-xl">
-                        <Clock className="w-6 h-6 text-blue-400" />
-                      </div>
-                      <div>
-                        <p className="text-xl font-bold text-white">
-                          {formatTime(selectedAppointment.scheduledStart)} - {formatTime(selectedAppointment.scheduledEnd)}
-                        </p>
-                        <p className="text-gray-400">Duración estimada</p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {selectedAppointment.locationId && (
-                    <div className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700">
-                      <label className="block text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wide">Ubicación</label>
-                      <div className="flex items-center gap-4">
-                        <div className="p-3 bg-purple-500/20 rounded-xl">
-                          <MapPin className="w-6 h-6 text-purple-400" />
-                        </div>
-                        <div>
-                          <p className="text-xl font-bold text-white">{selectedAppointment.locationId}</p>
-                          <p className="text-gray-400">Sede médica</p>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-                
-                <div className="space-y-6">
-                  <div className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700">
-                    <label className="block text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wide">Motivo de Consulta</label>
-                    <div className="p-4 bg-gray-900/50 rounded-xl border border-gray-600">
-                      <p className="text-white text-lg leading-relaxed">{selectedAppointment.motive}</p>
-                    </div>
-                  </div>
-                  
-                  <div className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700">
-                    <label className="block text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wide">Información Técnica</label>
-                    <div className="space-y-3">
-                      <div className="flex justify-between items-center py-2 border-b border-gray-700">
-                        <span className="text-gray-400">ID de Cita:</span>
-                        <span className="text-white font-mono text-sm bg-gray-700 px-2 py-1 rounded">{selectedAppointment.id}</span>
-                      </div>
-                      <div className="flex justify-between items-center py-2 border-b border-gray-700">
-                        <span className="text-gray-400">Versión:</span>
-                        <span className="text-white">{selectedAppointment.version || 'N/A'}</span>
-                      </div>
-                      <div className="flex justify-between items-center py-2">
-                        <span className="text-gray-400">Paciente ID:</span>
-                        <span className="text-white font-mono text-sm bg-gray-700 px-2 py-1 rounded">{selectedAppointment.patient}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Información adicional y historial */}
-              {selectedAppointment.createdAt && (
-                <div className="bg-linear-to-br from-gray-800/50 to-gray-700/30 rounded-2xl p-6 border border-gray-700">
-                  <h4 className="font-bold text-white mb-4 text-lg">Información de Creación</h4>
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-blue-500/20 rounded-lg">
-                      <Clock className="w-5 h-5 text-blue-400" />
+            <div className="p-8 space-y-6">
+              {/* Información en una sola columna */}
+              <div className="space-y-6">
+                <div className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700">
+                  <label className="block text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wide">Fecha de la Cita</label>
+                  <div className="flex items-center gap-4">
+                    <div className="p-3 bg-green-500/20 rounded-xl">
+                      <Calendar className="w-6 h-6 text-green-400" />
                     </div>
                     <div>
-                      <p className="text-gray-400 text-sm">Cita creada el:</p>
-                      <p className="text-white font-semibold">
-                        {new Date(selectedAppointment.createdAt._seconds * 1000).toLocaleString('es-ES')}
-                      </p>
+                      <p className="text-xl font-bold text-white">{formatDate(selectedAppointment.scheduledStart)}</p>
+                      <p className="text-gray-400">Día programado</p>
                     </div>
                   </div>
                 </div>
-              )}
-
-              {/* Historial mejorado */}
-              {selectedAppointment.history && selectedAppointment.history.length > 0 && (
-                <div className="bg-linear-to-br from-gray-800/50 to-gray-700/30 rounded-2xl p-6 border border-gray-700">
-                  <h4 className="font-bold text-white mb-6 text-lg">Historial de la Cita</h4>
-                  <div className="space-y-4">
-                    {selectedAppointment.history.map((entry, index) => (
-                      <div key={index} className="flex items-center gap-4 p-4 bg-gray-900/50 rounded-xl border border-gray-600">
-                        <div className="w-3 h-3 bg-linear-to-r from-green-400 to-emerald-500 rounded-full"></div>
-                        <div className="flex-1">
-                          <p className="text-white font-semibold capitalize">{entry.action}</p>
-                          <p className="text-gray-400 text-sm">
-                            {new Date(entry.timestamp._seconds * 1000).toLocaleString('es-ES')}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
+                
+                <div className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700">
+                  <label className="block text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wide">Horario</label>
+                  <div className="flex items-center gap-4">
+                    <div className="p-3 bg-blue-500/20 rounded-xl">
+                      <Clock className="w-6 h-6 text-blue-400" />
+                    </div>
+                    <div>
+                      <p className="text-xl font-bold text-white">
+                        {formatTime(selectedAppointment.scheduledStart)} - {formatTime(selectedAppointment.scheduledEnd)}
+                      </p>
+                      <p className="text-gray-400">Duración estimada</p>
+                    </div>
                   </div>
                 </div>
-              )}
+
+                <div className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700">
+                  <label className="block text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wide">Motivo de Consulta</label>
+                  <div className="p-4 bg-gray-900/50 rounded-xl border border-gray-600">
+                    <p className="text-white text-lg leading-relaxed">{selectedAppointment.motive}</p>
+                  </div>
+                </div>
+                
+                {selectedAppointment.locationId && (
+                  <div className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700">
+                    <label className="block text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wide">Sede de Atención</label>
+                    {(() => {
+                      const sedeData = getSedeData(selectedAppointment.locationId!);
+                      if (sedeData) {
+                        return (
+                          <div className="space-y-4">
+                            {/* Información principal de la sede */}
+                            <div className="flex items-start gap-4">
+                              <div className="p-3 bg-purple-500/20 rounded-xl">
+                                <Building className="w-6 h-6 text-purple-400" />
+                              </div>
+                              <div className="flex-1">
+                                <p className="text-xl font-bold text-white">{sedeData.name}</p>
+                                <p className="text-purple-400 text-sm">Sede médica principal</p>
+                              </div>
+                            </div>
+
+                            {/* Dirección completa */}
+                            <div className="bg-gray-900/50 rounded-xl p-4 border border-gray-600">
+                              <div className="flex items-start gap-3 mb-3">
+                                <MapPin className="w-5 h-5 text-green-400 mt-0.5" />
+                                <div>
+                                  <p className="text-green-400 text-sm font-semibold mb-1">DIRECCIÓN COMPLETA</p>
+                                  <p className="text-white font-medium">{sedeData.address}</p>
+                                  <p className="text-gray-300 text-sm mt-1">
+                                    {sedeData.district}, {sedeData.department}
+                                  </p>
+                                </div>
+                              </div>
+
+                              {/* Información de contacto */}
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 pt-4 border-t border-gray-700">
+                                {sedeData.phone && (
+                                  <div className="flex items-center gap-3">
+                                    <Phone className="w-4 h-4 text-blue-400" />
+                                    <div>
+                                      <p className="text-xs text-gray-400">TELÉFONO</p>
+                                      <p className="text-white text-sm font-medium">{sedeData.phone}</p>
+                                    </div>
+                                  </div>
+                                )}
+                                {sedeData.email && (
+                                  <div className="flex items-center gap-3">
+                                    <Mail className="w-4 h-4 text-yellow-400" />
+                                    <div>
+                                      <p className="text-xs text-gray-400">EMAIL</p>
+                                      <p className="text-white text-sm font-medium">{sedeData.email}</p>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* Coordenadas (solo si existen) */}
+                              {sedeData.coordinates && (
+                                <div className="mt-4 pt-4 border-t border-gray-700">
+                                  <button 
+                                    onClick={() => {
+                                      const { lat, lng } = sedeData.coordinates;
+                                      window.open(`https://maps.google.com/?q=${lat},${lng}`, '_blank');
+                                    }}
+                                    className="flex items-center gap-2 px-4 py-2 bg-green-500/20 text-green-400 rounded-lg hover:bg-green-500/30 transition-colors text-sm font-medium"
+                                  >
+                                    <MapPin className="w-4 h-4" />
+                                    Ver en Google Maps
+                                  </button>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      } else {
+                        // Fallback si no se encuentra la sede
+                        return (
+                          <div className="flex items-center gap-4">
+                            <div className="p-3 bg-purple-500/20 rounded-xl">
+                              <MapPin className="w-6 h-6 text-purple-400" />
+                            </div>
+                            <div>
+                              <p className="text-xl font-bold text-white">{selectedAppointment.locationId}</p>
+                              <p className="text-gray-400">Sede médica</p>
+                            </div>
+                          </div>
+                        );
+                      }
+                    })()}
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Footer del modal mejorado */}

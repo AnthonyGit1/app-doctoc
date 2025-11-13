@@ -72,6 +72,8 @@ interface DoctorCalendarData {
         [day: string]: Array<{
           startTime: string;
           endTime: string;
+          sedeId: string;
+          sedeName: string;
         }>;
       };
       dinamicos?: Array<{
@@ -82,6 +84,8 @@ interface DoctorCalendarData {
           [day: string]: Array<{
             startTime: string;
             endTime: string;
+            sedeId: string;
+            sedeName: string;
           }>;
         };
       }>;
@@ -150,11 +154,11 @@ export const useDoctorCalendar = ({ orgID }: UseDoctorCalendarOptions): UseDocto
       if (response && response.calendarInfo) {
         const calendarInfo = response.calendarInfo;
         
-        // Mapear horarios fijos
-        const horariosFijos: { [day: string]: Array<{ startTime: string; endTime: string; }> } = {};
+        // Mapear horarios fijos con información de sede
+        const horariosFijos: { [day: string]: Array<{ startTime: string; endTime: string; sedeId: string; sedeName: string; }> } = {};
         
         if (calendarInfo.horarios) {
-          Object.values(calendarInfo.horarios).forEach((sede: ApiSedeSchedule) => {
+          Object.entries(calendarInfo.horarios).forEach(([sedeId, sede]: [string, ApiSedeSchedule]) => {
             if (sede.default && sede.default.horariesFijo) {
               Object.entries(sede.default.horariesFijo).forEach(([day, schedules]: [string, ApiSchedule[]]) => {
                 if (schedules && Array.isArray(schedules) && schedules.length > 0) {
@@ -165,7 +169,9 @@ export const useDoctorCalendar = ({ orgID }: UseDoctorCalendarOptions): UseDocto
                   schedules.forEach((schedule: ApiSchedule) => {
                     horariosFijos[dayKey].push({
                       startTime: schedule.start,
-                      endTime: schedule.end
+                      endTime: schedule.end,
+                      sedeId: sedeId,
+                      sedeName: `Sede ${sedeId}` // Nombre temporal, se actualizará en el componente
                     });
                   });
                 }
@@ -174,25 +180,27 @@ export const useDoctorCalendar = ({ orgID }: UseDoctorCalendarOptions): UseDocto
           });
         }
 
-        // Mapear horarios dinámicos
+        // Mapear horarios dinámicos (sin información de sede por ahora)
         const horariosDinamicos: Array<{
           startDate: string;
           endDate: string;
           description?: string;
-          horarios: { [day: string]: Array<{ startTime: string; endTime: string; }> };
+          horarios: { [day: string]: Array<{ startTime: string; endTime: string; sedeId: string; sedeName: string; }> };
         }> = [];
         
         if (calendarInfo.horarios) {
-          Object.values(calendarInfo.horarios).forEach((sede: ApiSedeSchedule) => {
+          Object.entries(calendarInfo.horarios).forEach(([sedeId, sede]: [string, ApiSedeSchedule]) => {
             if (sede.default && sede.default.horariesDinamico) {
               sede.default.horariesDinamico.forEach((dinamico: ApiDynamicSchedule) => {
-                const horariosDinamicosDia: { [day: string]: Array<{ startTime: string; endTime: string; }> } = {};
+                const horariosDinamicosDia: { [day: string]: Array<{ startTime: string; endTime: string; sedeId: string; sedeName: string; }> } = {};
                 
                 if (dinamico.daySchedules) {
                   Object.entries(dinamico.daySchedules).forEach(([date, schedules]: [string, ApiSchedule[]]) => {
                     horariosDinamicosDia[date] = schedules.map((schedule: ApiSchedule) => ({
                       startTime: schedule.start,
-                      endTime: schedule.end
+                      endTime: schedule.end,
+                      sedeId: sedeId,
+                      sedeName: `Sede ${sedeId.split('_').pop()?.substring(0, 8) || 'Principal'}`
                     }));
                   });
                 }
