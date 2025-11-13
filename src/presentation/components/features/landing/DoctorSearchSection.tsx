@@ -91,11 +91,11 @@ export const DoctorSearchSection = ({ orgId = API_CONFIG.DEFAULT_ORG_ID }: Docto
                 Especialista en {doctor.speciality || 'medicina general'} con amplia experiencia.
               </p>
               <Link
-                href="/login"
+                href={`/doctor/${doctor.userId}/calendar`}
                 className="inline-flex items-center px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
               >
                 <Calendar className="w-4 h-4 mr-2" />
-                Agendar Cita
+                Ver Calendario
               </Link>
             </div>
           </div>
@@ -140,11 +140,11 @@ export const DoctorSearchSection = ({ orgId = API_CONFIG.DEFAULT_ORG_ID }: Docto
         </p>
         
         <Link
-          href="/#buscador-doctores"
+          href={`/doctor/${doctor.userId}/calendar`}
           className="w-full inline-flex items-center justify-center px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
         >
           <Calendar className="w-4 h-4 mr-2" />
-          Agendar Cita
+          Ver Calendario
         </Link>
       </div>
     );
@@ -361,7 +361,7 @@ export const DoctorSearchSection = ({ orgId = API_CONFIG.DEFAULT_ORG_ID }: Docto
             Contáctanos directamente y te ayudaremos a encontrar el especialista que necesitas.
           </p>
           <Link
-            href="/login"
+            href="/contact"
             className="inline-flex items-center px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
           >
             Contactar Asistencia

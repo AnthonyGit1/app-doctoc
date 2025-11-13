@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useEffect, Suspense } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "../../../presentation/components/ui/Button";
-import { useAuth } from "../../../infrastructure/auth/AuthContext";
+import { useAuth } from "../../../presentation/contexts/AuthContext";
 import { Navigation } from "../../../presentation/components/layouts/Navigation";
 import { Footer } from "../../../presentation/components/layouts/Footer";
 import toast from "react-hot-toast";
@@ -15,14 +15,17 @@ function LoginForm() {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { login, user } = useAuth();
+
+  const returnUrl = searchParams.get('returnUrl') || '/dashboard';
 
   useEffect(() => {
     // Redirigir si ya está autenticado
     if (user) {
-      router.push("/");
+      router.push(returnUrl);
     }
-  }, [user, router]);
+  }, [user, router, returnUrl]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,10 +35,15 @@ function LoginForm() {
     const loadingToast = toast.loading("Iniciando sesión...");
 
     try {
-      await login(email, password);
+      const success = await login(email, password);
       toast.dismiss(loadingToast);
-      toast.success("¡Bienvenido de vuelta!");
-      // La redirección se maneja en useEffect
+      
+      if (success) {
+        toast.success("¡Bienvenido de vuelta!");
+        router.push(returnUrl);
+      } else {
+        toast.error("Error al iniciar sesión. Verifica tus credenciales.");
+      }
     } catch (error: unknown) {
       toast.dismiss(loadingToast);
       const errorMessage =

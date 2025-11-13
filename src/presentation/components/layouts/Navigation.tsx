@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useRef, useEffect } from 'react';
-import { useAuth } from '../../../infrastructure/auth/AuthContext';
+import { useAuth } from '../../../presentation/contexts/AuthContext';
 import { User, ChevronDown, LogOut, Calendar, Settings } from 'lucide-react';
 
 interface NavigationProps {
@@ -38,6 +38,14 @@ export const Navigation = ({
     await logout();
     setDropdownOpen(false);
   };
+
+  const getDisplayName = () => {
+    if (!user) return 'Usuario';
+    
+    // Usar el displayName o name del usuario autenticado (ya viene de la API)
+    return user.displayName || user.name || 'Usuario';
+  };
+
   return (
     <nav className={`${transparent ? 'bg-gray-900/95 backdrop-blur-md border-gray-800' : 'bg-linear-to-r from-gray-900 via-gray-800 to-gray-900'} border-b border-gray-800 sticky top-0 z-50 shadow-xl`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -91,7 +99,7 @@ export const Navigation = ({
                     <User className="w-4 h-4 text-white" />
                   </div>
                   <span className="text-gray-200 font-medium hidden sm:inline group-hover:text-white transition-colors">
-                    {user.displayName || user.email?.split('@')[0]}
+                    {getDisplayName()}
                   </span>
                   <ChevronDown className="w-4 h-4 text-gray-400 group-hover:text-green-400 transition-colors" />
                 </button>
@@ -103,7 +111,7 @@ export const Navigation = ({
                       {/* Info del usuario */}
                       <div className="px-4 py-3 border-b border-gray-700 bg-linear-to-r from-gray-800 to-gray-900 rounded-t-xl">
                         <p className="text-sm font-medium text-white">
-                          {user.displayName || 'Usuario'}
+                          {getDisplayName()}
                         </p>
                         <p className="text-sm text-gray-400 truncate">
                           {user.email}

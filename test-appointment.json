@@ -1,0 +1,18 @@
+{
+    "action": "create",
+    "orgID": "rFQpBRoNGiv0V9KnHZV6",
+    "dayKey": "14-11-2025",
+    "scheduledStart": "2025-11-14T13:00:00.000Z",
+    "scheduledEnd": "2025-11-14T13:30:00.000Z",
+    "patient": "QI0H3vOu8rbeyAkXMG9WIDf9GRX2",
+    "userId": "ogDnuzQ0zCWY90SYq6zVP1OQ0rF2",
+    "type": "Consulta",
+    "typeId": "LKJwcXdPu4LEfckOevwy",
+    "motive": "aaaa",
+    "status": "pendiente",
+    "version": "v2",
+    "locationId": "sede_m7uzoolv_kypj0zbo",
+    "recipeID": "",
+    "category": "cita",
+    "personaEjecutante": "Rosaspiscoanthony"
+}

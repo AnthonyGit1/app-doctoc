@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuth } from '../../../infrastructure/auth/AuthContext';
+import { useAuth } from '../../../presentation/contexts/AuthContext';
 import { useRouter, usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -39,16 +39,16 @@ const LandingIcon = (props: React.SVGProps<SVGSVGElement>) => (
 
 
 export function AuthenticatedSidebar() {
-  const { user, loading, logout } = useAuth();
+  const { user, isLoading, logout } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    if (!loading && !user) {
+    if (!isLoading && !user) {
       router.push('/');
     }
-  }, [user, loading, router]);
+  }, [user, isLoading, router]);
 
   const handleLogout = async () => {
     await logout();
@@ -64,7 +64,7 @@ export function AuthenticatedSidebar() {
 
   const isActive = (href: string) => pathname === href;
 
-  if (loading) {
+  if (isLoading) {
     return (
       <>
         {/* Header mobile con loading */}
@@ -193,7 +193,7 @@ export function AuthenticatedSidebar() {
                           </div>
                           <div className="flex-1 min-w-0">
                             <p className="text-sm font-medium text-white truncate">
-                              {user.displayName || 'Usuario'}
+                              {user.displayName}
                             </p>
                             <p className="text-xs text-gray-400 truncate">
                               {user.email}
@@ -281,7 +281,7 @@ export function AuthenticatedSidebar() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-white truncate">
-                        {user.displayName || 'Usuario'}
+                        {user.displayName}
                       </p>
                       <p className="text-xs text-gray-400 truncate">
                         {user.email}

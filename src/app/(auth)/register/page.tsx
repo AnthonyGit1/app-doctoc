@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "../../../presentation/components/ui/Button";
-import { useAuth } from "../../../infrastructure/auth/AuthContext";
+import { useAuth } from "../../../presentation/contexts/AuthContext";
 import { Navigation } from "../../../presentation/components/layouts/Navigation";
 import { Footer } from "../../../presentation/components/layouts/Footer";
 import { DoctocApi } from "../../../infrastructure/api/doctoc-api";

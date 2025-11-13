@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Organization } from '../../../core/domain/entities/Organization';
-import { useAuth } from '../../../infrastructure/auth/AuthContext';
+import { useAuth } from '../../../presentation/contexts/AuthContext';
 
 interface FooterProps {
   organization?: Partial<Organization>;

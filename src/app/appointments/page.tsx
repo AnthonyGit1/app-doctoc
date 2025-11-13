@@ -1,214 +1,89 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
-import toast from 'react-hot-toast';
+import { useState, useEffect } from 'react';
+import { usePatientAppointments } from '../../presentation/hooks/usePatientAppointments';
 import SidebarLayout from '../../presentation/components/layouts/SidebarLayout';
-import { useAuth } from '../../infrastructure/auth/AuthContext';
-import { DoctocApiClient } from '../../infrastructure/api/api-client';
-import { DoctocApi } from '../../infrastructure/api/doctoc-api';
 import { API_CONFIG } from '../../config/constants';
 import {
   Calendar,
   Clock,
   MapPin,
-  User,
-  FileText,
   AlertCircle,
   CheckCircle,
   XCircle,
   Plus,
-  Filter
+  Filter,
+  Eye,
+  X
 } from 'lucide-react';
-import { Button } from '@/presentation/components/ui/Button';
+import Link from 'next/link';
 
-interface Appointment {
+interface PatientAppointment {
   id: string;
-  patientId: string;
-  userId: string;
-  date: string;
-  startDate: string;
-  endDate: string;
+  patient: string;
+  medico: string;
   scheduledStart: string;
   scheduledEnd: string;
   type: string;
-  typeId?: string;
-  category: string;
   motive: string;
   status: 'pendiente' | 'confirmada' | 'completada' | 'cancelada';
-  version: string;
-  locationId: string;
-  recipeID?: string;
-  personaEjecutante: string;
-  patient?: string;
-  medico?: string;
-  createdAt?: {
-    _seconds: number;
-    _nanoseconds: number;
-  };
+  date?: string;
+  startDate?: string;
+  endDate?: string;
+  patientId?: string;
+  userId?: string;
+  version?: string;
+  locationId?: string;
   history?: Array<{
     action: string;
     timestamp: {
       _seconds: number;
       _nanoseconds: number;
     };
-    userId: string;
+    userId?: string;
   }>;
+  recipeID?: string;
+  createdAt?: {
+    _seconds: number;
+    _nanoseconds: number;
+  };
 }
 
+type FilterType = 'todas' | 'pendientes' | 'confirmadas' | 'completadas';
+
 export default function AppointmentsPage() {
-  const { user } = useAuth();
-  const [appointments, setAppointments] = useState<Appointment[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [filter, setFilter] = useState<'all' | 'pendiente' | 'confirmada' | 'completada'>('all');
-  const [doctocApi] = useState(() => new DoctocApi(new DoctocApiClient()));
-
-  // Obtener el orgID desde la configuración
-  const ORG_ID = API_CONFIG.DEFAULT_ORG_ID;
-
-  // Función para obtener el ID del paciente desde el perfil
-  const getPatientId = useCallback(async () => {
-    try {
-      if (!user?.email) return null;
-
-      // Buscar el paciente por email para obtener su ID
-      const searchResult = await doctocApi.searchPatients({
-        action: 'search' as const,
-        orgID: ORG_ID,
-        type: 'nombre' as const,
-        text: user.email.split('@')[0],
-        limit: 10
-      });
-
-      if (searchResult?.patients?.length > 0) {
-        const patient = searchResult.patients.find(p => 
-          p.mail?.toLowerCase() === user.email?.toLowerCase()
-        );
-        return patient?.patient_id || null;
-      }
-
-      // Fallback: buscar en todos los pacientes
-      const allPatientsResult = await doctocApi.getAllPatients({
-        action: 'getAll' as const,
-        orgID: ORG_ID,
-        limit: 50
-      });
-
-      if (allPatientsResult?.patients?.length > 0) {
-        const patient = allPatientsResult.patients.find(p => 
-          p.mail?.toLowerCase() === user.email?.toLowerCase()
-        );
-        return patient?.patient_id || null;
-      }
-
-      return null;
-    } catch (error) {
-      console.error('Error obteniendo ID del paciente:', error);
-      return null;
-    }
-  }, [user, doctocApi, ORG_ID]);
-
-  // Función para obtener las citas del paciente
-  const fetchAppointments = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      if (!user?.uid) {
-        throw new Error('No hay usuario autenticado');
-      }
-
-      // Primero obtener el ID del paciente
-      const pid = await getPatientId();
-      if (!pid) {
-        throw new Error('No se encontró el perfil del paciente');
-      }
-
-      // Obtener las citas del paciente
-      const appointmentsResult = await doctocApi.getPatientAppointments({
-        orgID: ORG_ID,
-        patientID: pid
-      });
-
-      if (appointmentsResult?.quotes) {
-        // Mapear los datos para que coincidan con la interfaz Appointment
-        const mappedAppointments: Appointment[] = appointmentsResult.quotes.map(quote => ({
-          id: quote.id,
-          patientId: quote.patientId,
-          userId: quote.userId,
-          date: quote.date,
-          startDate: quote.startDate,
-          endDate: quote.endDate,
-          scheduledStart: quote.startDate, // Usar startDate como scheduledStart
-          scheduledEnd: quote.endDate, // Usar endDate como scheduledEnd
-          type: quote.type,
-          typeId: '',
-          category: 'cita',
-          motive: quote.motive,
-          status: quote.status as 'pendiente' | 'confirmada' | 'completada' | 'cancelada',
-          version: quote.version,
-          locationId: quote.locationId,
-          recipeID: quote.recipeID,
-          personaEjecutante: 'No especificado',
-          createdAt: quote.createdAt,
-          history: quote.history
-        }));
-        setAppointments(mappedAppointments);
-      } else {
-        setAppointments([]);
-      }
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : 'Error al cargar las citas';
-      setError(errorMessage);
-      toast.error(errorMessage);
-      console.error('Error fetching appointments:', error);
-    } finally {
-      setLoading(false);
-    }
-  }, [user, getPatientId, doctocApi, ORG_ID]);
-
-  useEffect(() => {
-    if (user?.uid) {
-      fetchAppointments();
-    }
-  }, [user, fetchAppointments]);
-
-  // Filtrar citas según el estado seleccionado
-  const filteredAppointments = appointments.filter(appointment => {
-    if (filter === 'all') return true;
-    return appointment.status === filter;
+  const [selectedAppointment, setSelectedAppointment] = useState<PatientAppointment | null>(null);
+  const [filter, setFilter] = useState<FilterType>('todas');
+  
+  const { 
+    appointments, 
+    isLoading, 
+    error, 
+    getMyAppointments 
+  } = usePatientAppointments({
+    orgID: API_CONFIG.DEFAULT_ORG_ID
   });
 
-  // Función para obtener el color del estado
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'pendiente':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'confirmada':
-        return 'bg-blue-100 text-blue-800 border-blue-200';
-      case 'completada':
-        return 'bg-green-100 text-green-800 border-green-200';
-      case 'cancelada':
-        return 'bg-red-100 text-red-800 border-red-200';
-      default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
-    }
-  };
+  useEffect(() => {
+    console.log('🔄 useEffect triggered, calling getMyAppointments...');
+    getMyAppointments();
+  }, [getMyAppointments]);
 
-  // Función para obtener el icono del estado
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'pendiente':
-        return <Clock className="w-4 h-4" />;
-      case 'confirmada':
-        return <CheckCircle className="w-4 h-4" />;
-      case 'completada':
-        return <CheckCircle className="w-4 h-4" />;
-      case 'cancelada':
-        return <XCircle className="w-4 h-4" />;
-      default:
-        return <AlertCircle className="w-4 h-4" />;
-    }
+  // Filtrar citas según el filtro seleccionado
+  const filteredAppointments = appointments.filter(appointment => {
+    if (filter === 'todas') return true;
+    if (filter === 'pendientes') return appointment.status === 'pendiente';
+    if (filter === 'confirmadas') return appointment.status === 'confirmada';
+    if (filter === 'completadas') return appointment.status === 'completada';
+    return true;
+  });
+
+  // Obtener estadísticas
+  const stats = {
+    total: appointments.length,
+    pendientes: appointments.filter(a => a.status === 'pendiente').length,
+    confirmadas: appointments.filter(a => a.status === 'confirmada').length,
+    completadas: appointments.filter(a => a.status === 'completada').length
   };
 
   // Función para formatear fecha
@@ -216,9 +91,9 @@ export default function AppointmentsPage() {
     const date = new Date(dateString);
     return date.toLocaleDateString('es-ES', {
       weekday: 'long',
-      year: 'numeric',
+      day: 'numeric',
       month: 'long',
-      day: 'numeric'
+      year: 'numeric'
     });
   };
 
@@ -231,7 +106,39 @@ export default function AppointmentsPage() {
     });
   };
 
-  if (loading) {
+  // Función para obtener el ícono según el estado
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'pendiente':
+        return <AlertCircle className="w-5 h-5 text-yellow-400" />;
+      case 'confirmada':
+        return <CheckCircle className="w-5 h-5 text-green-400" />;
+      case 'completada':
+        return <CheckCircle className="w-5 h-5 text-blue-400" />;
+      case 'cancelada':
+        return <XCircle className="w-5 h-5 text-red-400" />;
+      default:
+        return <AlertCircle className="w-5 h-5 text-gray-400" />;
+    }
+  };
+
+  // Función para obtener el color del estado
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'pendiente':
+        return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
+      case 'confirmada':
+        return 'bg-green-500/20 text-green-400 border-green-500/30';
+      case 'completada':
+        return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
+      case 'cancelada':
+        return 'bg-red-500/20 text-red-400 border-red-500/30';
+      default:
+        return 'bg-gray-500/20 text-gray-400 border-gray-500/30';
+    }
+  };
+
+  if (isLoading) {
     return (
       <SidebarLayout>
         <div className="min-h-screen flex items-center justify-center">
@@ -248,16 +155,16 @@ export default function AppointmentsPage() {
     return (
       <SidebarLayout>
         <div className="min-h-screen flex items-center justify-center">
-          <div className="text-center p-8">
-            <div className="bg-red-100 text-red-800 p-4 rounded-lg mb-4">
-              {error}
+          <div className="text-center">
+            <div className="p-6 bg-red-500/10 border border-red-500/30 rounded-xl">
+              <p className="text-red-400 mb-4">Error: {error}</p>
+              <button 
+                onClick={getMyAppointments}
+                className="px-6 py-3 bg-red-500 text-white rounded-xl hover:bg-red-600 transition-colors"
+              >
+                Reintentar
+              </button>
             </div>
-            <button 
-              onClick={fetchAppointments}
-              className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
-            >
-              Reintentar
-            </button>
           </div>
         </div>
       </SidebarLayout>
@@ -267,204 +174,219 @@ export default function AppointmentsPage() {
   return (
     <SidebarLayout>
       <div className="min-h-screen p-6">
-        <div className="max-w-6xl mx-auto">
+        <div className="space-y-6">
           {/* Header */}
-          <div className="bg-linear-to-br from-gray-800 to-gray-900 rounded-2xl p-8 mb-8 border border-gray-700 shadow-2xl">
-            <div className="flex justify-between items-start mb-6">
-              <div>
-                <h1 className="text-3xl font-bold text-white mb-2">Mis Citas</h1>
-                <p className="text-gray-400">Gestiona y revisa todas tus citas médicas</p>
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+            <div>
+              <h1 className="text-4xl font-bold text-white mb-2">Mis Citas Médicas</h1>
+              <p className="text-gray-400 text-lg">Gestiona y revisa todas tus citas médicas de manera profesional</p>
+            </div>
+            
+            <div className="flex items-center gap-3 flex-wrap">
+              <button 
+                onClick={getMyAppointments}
+                className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+              >
+                <Calendar className="w-5 h-5" />
+                Actualizar
+              </button>
+              
+              <Link 
+                href="/#buscador-doctores"
+                className="flex items-center gap-2 px-6 py-3 bg-linear-to-r from-green-500 to-emerald-600 text-white rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+              >
+                <Plus className="w-5 h-5" />
+                Nueva Cita
+              </Link>
+            </div>
+          </div>
+
+          {/* Estadísticas */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="bg-linear-to-br from-gray-800 to-gray-900 rounded-2xl p-6 border border-gray-700 hover:border-blue-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-blue-500/20 rounded-xl">
+                  <Calendar className="w-7 h-7 text-blue-400" />
+                </div>
+                <div>
+                  <p className="text-3xl font-bold text-white">{stats.total}</p>
+                  <p className="text-sm text-gray-400 font-medium">Total de Citas</p>
+                </div>
               </div>
             </div>
-
-            {/* Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div className="bg-gray-700 rounded-xl p-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
-                    <Calendar className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <p className="text-gray-400 text-sm">Total</p>
-                    <p className="text-white font-bold text-lg">{appointments.length}</p>
-                  </div>
+            
+            <div className="bg-linear-to-br from-gray-800 to-gray-900 rounded-2xl p-6 border border-gray-700 hover:border-yellow-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-yellow-500/10">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-yellow-500/20 rounded-xl">
+                  <Clock className="w-7 h-7 text-yellow-400" />
+                </div>
+                <div>
+                  <p className="text-3xl font-bold text-white">{stats.pendientes}</p>
+                  <p className="text-sm text-gray-400 font-medium">Pendientes</p>
                 </div>
               </div>
-              
-              <div className="bg-gray-700 rounded-xl p-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-yellow-500 rounded-lg flex items-center justify-center">
-                    <Clock className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <p className="text-gray-400 text-sm">Pendientes</p>
-                    <p className="text-white font-bold text-lg">
-                      {appointments.filter(a => a.status === 'pendiente').length}
-                    </p>
-                  </div>
+            </div>
+            
+            <div className="bg-linear-to-br from-gray-800 to-gray-900 rounded-2xl p-6 border border-gray-700 hover:border-green-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-green-500/10">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-green-500/20 rounded-xl">
+                  <CheckCircle className="w-7 h-7 text-green-400" />
+                </div>
+                <div>
+                  <p className="text-3xl font-bold text-white">{stats.confirmadas}</p>
+                  <p className="text-sm text-gray-400 font-medium">Confirmadas</p>
                 </div>
               </div>
-
-              <div className="bg-gray-700 rounded-xl p-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
-                    <CheckCircle className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <p className="text-gray-400 text-sm">Confirmadas</p>
-                    <p className="text-white font-bold text-lg">
-                      {appointments.filter(a => a.status === 'confirmada').length}
-                    </p>
-                  </div>
+            </div>
+            
+            <div className="bg-linear-to-br from-gray-800 to-gray-900 rounded-2xl p-6 border border-gray-700 hover:border-purple-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/10">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-purple-500/20 rounded-xl">
+                  <CheckCircle className="w-7 h-7 text-purple-400" />
                 </div>
-              </div>
-
-              <div className="bg-gray-700 rounded-xl p-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center">
-                    <CheckCircle className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <p className="text-gray-400 text-sm">Completadas</p>
-                    <p className="text-white font-bold text-lg">
-                      {appointments.filter(a => a.status === 'completada').length}
-                    </p>
-                  </div>
+                <div>
+                  <p className="text-3xl font-bold text-white">{stats.completadas}</p>
+                  <p className="text-sm text-gray-400 font-medium">Completadas</p>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Filtros */}
-          <div className="bg-linear-to-br from-gray-800 to-gray-900 rounded-2xl p-6 mb-8 border border-gray-700 shadow-xl">
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <Filter className="w-5 h-5 text-gray-400" />
-                <span className="text-white font-medium">Filtrar por estado:</span>
+          <div className="bg-linear-to-br from-gray-800 to-gray-900 rounded-2xl p-6 border border-gray-700 shadow-lg">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-gray-700/50 rounded-lg">
+                  <Filter className="w-5 h-5 text-gray-400" />
+                </div>
+                <span className="text-white font-semibold text-lg">Filtrar citas:</span>
               </div>
               
-              <div className="flex gap-2">
-                {[
-                  { key: 'all', label: 'Todas' },
-                  { key: 'pendiente', label: 'Pendientes' },
-                  { key: 'confirmada', label: 'Confirmadas' },
-                  { key: 'completada', label: 'Completadas' }
-                ].map((option) => (
+              <div className="flex flex-wrap gap-3">
+                {([
+                  { key: 'todas', label: 'Todas', count: stats.total, color: 'blue' },
+                  { key: 'pendientes', label: 'Pendientes', count: stats.pendientes, color: 'yellow' },
+                  { key: 'confirmadas', label: 'Confirmadas', count: stats.confirmadas, color: 'green' },
+                  { key: 'completadas', label: 'Completadas', count: stats.completadas, color: 'purple' }
+                ] as const).map((filterOption) => (
                   <button
-                    key={option.key}
-                    onClick={() => setFilter(option.key as 'all' | 'pendiente' | 'confirmada' | 'completada')}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                      filter === option.key
-                        ? 'bg-green-500 text-white'
-                        : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                    key={filterOption.key}
+                    onClick={() => setFilter(filterOption.key)}
+                    className={`px-4 py-2 rounded-xl font-semibold transition-all duration-200 ${
+                      filter === filterOption.key
+                        ? `bg-${filterOption.color}-500 text-white shadow-lg shadow-${filterOption.color}-500/25 scale-105`
+                        : 'bg-gray-700 text-gray-300 hover:bg-gray-600 hover:scale-105'
                     }`}
                   >
-                    {option.label}
+                    <span className="flex items-center gap-2">
+                      {filterOption.label}
+                      <span className={`px-2 py-0.5 text-xs rounded-full ${
+                        filter === filterOption.key
+                          ? 'bg-white/20'
+                          : 'bg-gray-600'
+                      }`}>
+                        {filterOption.count}
+                      </span>
+                    </span>
                   </button>
                 ))}
               </div>
             </div>
           </div>
 
-          {/* Lista de Citas */}
+          {/* Lista de citas */}
           {filteredAppointments.length === 0 ? (
-            <div className="bg-linear-to-br from-gray-800 to-gray-900 rounded-2xl p-12 border border-gray-700 shadow-xl text-center">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Calendar className="w-8 h-8 text-blue-600" />
+            <div className="bg-linear-to-br from-gray-800 to-gray-900 rounded-2xl p-16 text-center border border-gray-700 shadow-xl">
+              <div className="max-w-md mx-auto">
+                <div className="w-24 h-24 bg-linear-to-br from-green-500/20 to-emerald-600/20 rounded-full flex items-center justify-center mx-auto mb-6 border border-green-500/30">
+                  <Calendar className="w-12 h-12 text-green-400" />
+                </div>
+                
+                <h3 className="text-2xl font-bold text-white mb-3">
+                  {filter === 'todas' ? 'No tienes citas programadas' : `No hay citas ${filter}`}
+                </h3>
+                
+                <p className="text-gray-400 text-lg mb-8 leading-relaxed">
+                  {filter === 'todas' 
+                    ? 'Comienza tu cuidado médico agendando tu primera cita con nuestros profesionales especializados.'
+                    : `En este momento no tienes citas con estado ${filter}. Puedes agendar una nueva o cambiar el filtro.`
+                  }
+                </p>
+                
+                {filter === 'todas' && (
+                  <Link 
+                    href="/#buscador-doctores"
+                    className="inline-flex items-center gap-3 px-8 py-4 bg-linear-to-r from-green-500 to-emerald-600 text-white rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 font-semibold"
+                  >
+                    <Plus className="w-5 h-5" />
+                    Programar mi primera cita
+                  </Link>
+                )}
               </div>
-              <h3 className="text-xl font-semibold text-white mb-3">
-                {filter === 'all' ? 'No tienes citas' : `No tienes citas ${filter}s`}
-              </h3>
-              <p className="text-gray-400 mb-6">
-                {filter === 'all' 
-                  ? 'Aún no has programado ninguna cita médica.' 
-                  : `No hay citas con estado ${filter}.`
-                }
-              </p>
-              <Button 
-                className="flex items-center gap-2 px-6 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors mx-auto"
-                onClick={() => window.location.href = '/#buscador-doctores'}
-              >
-                <Plus className="w-5 h-5" />
-                Programar primera cita
-              </Button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="space-y-6">
               {filteredAppointments.map((appointment) => (
-                <div
-                  key={appointment.id}
-                  className="bg-linear-to-br from-gray-800 to-gray-900 rounded-2xl p-6 border border-gray-700 shadow-xl hover:shadow-2xl transition-shadow"
+                <div 
+                  key={appointment.id} 
+                  className="group bg-linear-to-br from-gray-800 to-gray-900 rounded-2xl p-6 border border-gray-700 hover:border-green-500/50 hover:shadow-2xl hover:shadow-green-500/10 transition-all duration-300 transform hover:-translate-y-1"
                 >
-                  <div className="flex justify-between items-start mb-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
-                        <User className="w-6 h-6 text-white" />
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-start gap-6">
+                      <div className={`flex items-center justify-center w-16 h-16 rounded-2xl bg-linear-to-br ${
+                        appointment.status === 'pendiente' ? 'from-yellow-500/20 to-yellow-600/20' :
+                        appointment.status === 'confirmada' ? 'from-green-500/20 to-green-600/20' :
+                        appointment.status === 'completada' ? 'from-purple-500/20 to-purple-600/20' :
+                        'from-gray-500/20 to-gray-600/20'
+                      } border border-opacity-30 ${
+                        appointment.status === 'pendiente' ? 'border-yellow-500' :
+                        appointment.status === 'confirmada' ? 'border-green-500' :
+                        appointment.status === 'completada' ? 'border-purple-500' :
+                        'border-gray-500'
+                      }`}>
+                        {getStatusIcon(appointment.status)}
                       </div>
-                      <div>
-                        <h3 className="text-lg font-semibold text-white">
-                          {appointment.type || 'Consulta Médica'}
-                        </h3>
-                        <p className="text-gray-400 text-sm">
-                          {appointment.motive || 'Sin motivo especificado'}
-                        </p>
+                      
+                      <div className="flex-1">
+                        <div className="flex items-center gap-4 mb-3">
+                          <h3 className="text-xl font-bold text-white group-hover:text-green-400 transition-colors">
+                            {appointment.type}
+                          </h3>
+                          <span className={`px-3 py-1 rounded-xl text-sm font-semibold border ${getStatusColor(appointment.status)}`}>
+                            {appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1)}
+                          </span>
+                        </div>
+                        
+                        <p className="text-gray-300 mb-4 text-lg">{appointment.motive}</p>
+                        
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <div className="flex items-center gap-3 p-3 bg-gray-800/50 rounded-xl">
+                            <Calendar className="w-5 h-5 text-green-400" />
+                            <div>
+                              <p className="text-xs text-gray-400 font-medium">FECHA</p>
+                              <p className="text-white font-semibold">{formatDate(appointment.scheduledStart)}</p>
+                            </div>
+                          </div>
+                          
+                          <div className="flex items-center gap-3 p-3 bg-gray-800/50 rounded-xl">
+                            <Clock className="w-5 h-5 text-blue-400" />
+                            <div>
+                              <p className="text-xs text-gray-400 font-medium">HORA</p>
+                              <p className="text-white font-semibold">{formatTime(appointment.scheduledStart)}</p>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                     
-                    <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(appointment.status)}`}>
-                      {getStatusIcon(appointment.status)}
-                      {appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1)}
-                    </span>
-                  </div>
-
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-3 text-gray-300">
-                      <Calendar className="w-4 h-4 text-green-500" />
-                      <span className="text-sm">
-                        {formatDate(appointment.scheduledStart || appointment.startDate)}
-                      </span>
-                    </div>
-                    
-                    <div className="flex items-center gap-3 text-gray-300">
-                      <Clock className="w-4 h-4 text-green-500" />
-                      <span className="text-sm">
-                        {formatTime(appointment.scheduledStart || appointment.startDate)} - {formatTime(appointment.scheduledEnd || appointment.endDate)}
-                      </span>
-                    </div>
-
-                    {appointment.locationId && (
-                      <div className="flex items-center gap-3 text-gray-300">
-                        <MapPin className="w-4 h-4 text-green-500" />
-                        <span className="text-sm">{appointment.locationId}</span>
-                      </div>
-                    )}
-
-                    <div className="flex items-center gap-3 text-gray-300">
-                      <FileText className="w-4 h-4 text-green-500" />
-                      <span className="text-sm">
-                        Ejecutante: {appointment.personaEjecutante || 'No especificado'}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="mt-4 pt-4 border-t border-gray-700 flex justify-between items-center">
-                    <div className="text-xs text-gray-500">
-                      {appointment.createdAt && (
-                        <span>
-                          Creada: {new Date(appointment.createdAt._seconds * 1000).toLocaleDateString('es-ES')}
-                        </span>
-                      )}
-                    </div>
-                    
-                    <div className="flex gap-2">
-                      <button className="px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700 transition-colors">
+                    <div className="flex flex-col gap-3">
+                      <button 
+                        onClick={() => setSelectedAppointment(appointment)}
+                        className="flex items-center gap-2 px-6 py-3 bg-linear-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                      >
+                        <Eye className="w-4 h-4" />
                         Ver detalles
                       </button>
-                      {appointment.status === 'pendiente' && (
-                        <button className="px-3 py-1 bg-gray-600 text-white text-xs rounded hover:bg-gray-700 transition-colors">
-                          Editar
-                        </button>
-                      )}
                     </div>
                   </div>
                 </div>
@@ -473,6 +395,168 @@ export default function AppointmentsPage() {
           )}
         </div>
       </div>
+
+      {/* Modal de detalles mejorado */}
+      {selectedAppointment && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in duration-200">
+          <div className="bg-linear-to-br from-gray-900 to-gray-800 rounded-3xl max-w-3xl w-full max-h-[90vh] overflow-y-auto border border-gray-600 shadow-2xl">
+            {/* Header del modal mejorado */}
+            <div className="relative p-8 border-b border-gray-700">
+              <div className="flex items-start gap-6">
+                <div className={`flex items-center justify-center w-20 h-20 rounded-2xl bg-linear-to-br ${
+                  selectedAppointment.status === 'pendiente' ? 'from-yellow-500/20 to-yellow-600/20 border border-yellow-500/30' :
+                  selectedAppointment.status === 'confirmada' ? 'from-green-500/20 to-green-600/20 border border-green-500/30' :
+                  selectedAppointment.status === 'completada' ? 'from-purple-500/20 to-purple-600/20 border border-purple-500/30' :
+                  'from-gray-500/20 to-gray-600/20 border border-gray-500/30'
+                }`}>
+                  {getStatusIcon(selectedAppointment.status)}
+                </div>
+                
+                <div className="flex-1">
+                  <h2 className="text-3xl font-bold text-white mb-2">{selectedAppointment.type}</h2>
+                  <p className="text-gray-400 text-lg mb-3">Información completa de tu cita médica</p>
+                  <span className={`px-4 py-2 rounded-xl font-semibold border ${getStatusColor(selectedAppointment.status)}`}>
+                    {selectedAppointment.status.charAt(0).toUpperCase() + selectedAppointment.status.slice(1)}
+                  </span>
+                </div>
+                
+                <button 
+                  onClick={() => setSelectedAppointment(null)}
+                  className="p-3 hover:bg-gray-700 rounded-xl transition-all duration-200 group"
+                >
+                  <X className="w-6 h-6 text-gray-400 group-hover:text-white" />
+                </button>
+              </div>
+            </div>
+
+            {/* Contenido del modal mejorado */}
+            <div className="p-8 space-y-8">
+              {/* Información principal con diseño mejorado */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div className="space-y-6">
+                  <div className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700">
+                    <label className="block text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wide">Fecha de la Cita</label>
+                    <div className="flex items-center gap-4">
+                      <div className="p-3 bg-green-500/20 rounded-xl">
+                        <Calendar className="w-6 h-6 text-green-400" />
+                      </div>
+                      <div>
+                        <p className="text-xl font-bold text-white">{formatDate(selectedAppointment.scheduledStart)}</p>
+                        <p className="text-gray-400">Día programado</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700">
+                    <label className="block text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wide">Horario</label>
+                    <div className="flex items-center gap-4">
+                      <div className="p-3 bg-blue-500/20 rounded-xl">
+                        <Clock className="w-6 h-6 text-blue-400" />
+                      </div>
+                      <div>
+                        <p className="text-xl font-bold text-white">
+                          {formatTime(selectedAppointment.scheduledStart)} - {formatTime(selectedAppointment.scheduledEnd)}
+                        </p>
+                        <p className="text-gray-400">Duración estimada</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {selectedAppointment.locationId && (
+                    <div className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700">
+                      <label className="block text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wide">Ubicación</label>
+                      <div className="flex items-center gap-4">
+                        <div className="p-3 bg-purple-500/20 rounded-xl">
+                          <MapPin className="w-6 h-6 text-purple-400" />
+                        </div>
+                        <div>
+                          <p className="text-xl font-bold text-white">{selectedAppointment.locationId}</p>
+                          <p className="text-gray-400">Sede médica</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                
+                <div className="space-y-6">
+                  <div className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700">
+                    <label className="block text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wide">Motivo de Consulta</label>
+                    <div className="p-4 bg-gray-900/50 rounded-xl border border-gray-600">
+                      <p className="text-white text-lg leading-relaxed">{selectedAppointment.motive}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700">
+                    <label className="block text-sm font-semibold text-gray-300 mb-3 uppercase tracking-wide">Información Técnica</label>
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center py-2 border-b border-gray-700">
+                        <span className="text-gray-400">ID de Cita:</span>
+                        <span className="text-white font-mono text-sm bg-gray-700 px-2 py-1 rounded">{selectedAppointment.id}</span>
+                      </div>
+                      <div className="flex justify-between items-center py-2 border-b border-gray-700">
+                        <span className="text-gray-400">Versión:</span>
+                        <span className="text-white">{selectedAppointment.version || 'N/A'}</span>
+                      </div>
+                      <div className="flex justify-between items-center py-2">
+                        <span className="text-gray-400">Paciente ID:</span>
+                        <span className="text-white font-mono text-sm bg-gray-700 px-2 py-1 rounded">{selectedAppointment.patient}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Información adicional y historial */}
+              {selectedAppointment.createdAt && (
+                <div className="bg-linear-to-br from-gray-800/50 to-gray-700/30 rounded-2xl p-6 border border-gray-700">
+                  <h4 className="font-bold text-white mb-4 text-lg">Información de Creación</h4>
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-blue-500/20 rounded-lg">
+                      <Clock className="w-5 h-5 text-blue-400" />
+                    </div>
+                    <div>
+                      <p className="text-gray-400 text-sm">Cita creada el:</p>
+                      <p className="text-white font-semibold">
+                        {new Date(selectedAppointment.createdAt._seconds * 1000).toLocaleString('es-ES')}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Historial mejorado */}
+              {selectedAppointment.history && selectedAppointment.history.length > 0 && (
+                <div className="bg-linear-to-br from-gray-800/50 to-gray-700/30 rounded-2xl p-6 border border-gray-700">
+                  <h4 className="font-bold text-white mb-6 text-lg">Historial de la Cita</h4>
+                  <div className="space-y-4">
+                    {selectedAppointment.history.map((entry, index) => (
+                      <div key={index} className="flex items-center gap-4 p-4 bg-gray-900/50 rounded-xl border border-gray-600">
+                        <div className="w-3 h-3 bg-linear-to-r from-green-400 to-emerald-500 rounded-full"></div>
+                        <div className="flex-1">
+                          <p className="text-white font-semibold capitalize">{entry.action}</p>
+                          <p className="text-gray-400 text-sm">
+                            {new Date(entry.timestamp._seconds * 1000).toLocaleString('es-ES')}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Footer del modal mejorado */}
+            <div className="flex justify-end gap-4 p-8 border-t border-gray-700">
+              <button 
+                onClick={() => setSelectedAppointment(null)}
+                className="px-8 py-3 bg-linear-to-r from-gray-700 to-gray-600 text-white rounded-xl hover:from-gray-600 hover:to-gray-500 transition-all duration-200 font-semibold"
+              >
+                Cerrar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </SidebarLayout>
   );
 }
